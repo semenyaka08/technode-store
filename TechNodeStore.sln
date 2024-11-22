@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechNode.Api", "TechNode.Api\TechNode.Api.csproj", "{F3913DE9-F8B7-4F56-8DD0-673974AEF1A2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechNode.Core", "TechNode.Core\TechNode.Core.csproj", "{4A7624BC-3998-45C3-8C28-D92FA775ABAC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechNode.Infrastructure", "TechNode.Infrastructure\TechNode.Infrastructure.csproj", "{3972D42E-127A-4F1A-8FC5-097214145F1A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F3913DE9-F8B7-4F56-8DD0-673974AEF1A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3913DE9-F8B7-4F56-8DD0-673974AEF1A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3913DE9-F8B7-4F56-8DD0-673974AEF1A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3913DE9-F8B7-4F56-8DD0-673974AEF1A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A7624BC-3998-45C3-8C28-D92FA775ABAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A7624BC-3998-45C3-8C28-D92FA775ABAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A7624BC-3998-45C3-8C28-D92FA775ABAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A7624BC-3998-45C3-8C28-D92FA775ABAC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3972D42E-127A-4F1A-8FC5-097214145F1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3972D42E-127A-4F1A-8FC5-097214145F1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3972D42E-127A-4F1A-8FC5-097214145F1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3972D42E-127A-4F1A-8FC5-097214145F1A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

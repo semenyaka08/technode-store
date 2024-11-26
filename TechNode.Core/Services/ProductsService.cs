@@ -28,7 +28,7 @@ public class ProductsService(IProductsRepository productsRepository, ILogger<Pro
             PictureUrl = product.PictureUrl,
             Type = product.Type,
             Brand = product.Brand,
-            QuantityInStock = product.QuantityInStock,
+            QuantityInStock = product.StockQuantity,
         };
     }
 
@@ -47,7 +47,7 @@ public class ProductsService(IProductsRepository productsRepository, ILogger<Pro
             PictureUrl = z.PictureUrl,
             Type = z.Type,
             Brand = z.Brand,
-            QuantityInStock = z.QuantityInStock,
+            QuantityInStock = z.StockQuantity,
         });
         
         return new PageResult<ProductGetResponse>(mappedProducts, totalCount, request.PageSize, request.PageNumber);
@@ -65,7 +65,8 @@ public class ProductsService(IProductsRepository productsRepository, ILogger<Pro
             PictureUrl = addRequest.PictureUrl,
             Type = addRequest.Type,
             Brand = addRequest.Brand,
-            QuantityInStock = addRequest.QuantityInStock,
+            StockQuantity = addRequest.QuantityInStock,
+            Category = new Category{Name = ""}
         };
         
         var productId = await productsRepository.AddProductAsync(product);
@@ -87,7 +88,7 @@ public class ProductsService(IProductsRepository productsRepository, ILogger<Pro
         product.PictureUrl = updateRequest.PictureUrl;
         product.Type = updateRequest.Type;
         product.Brand = updateRequest.Brand;
-        product.QuantityInStock = updateRequest.QuantityInStock;
+        product.StockQuantity = updateRequest.QuantityInStock;
 
         await productsRepository.SaveChangesAsync();
     }

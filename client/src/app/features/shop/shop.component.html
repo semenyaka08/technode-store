@@ -1,0 +1,15 @@
+<div class="grid grid-cols-[25%_1fr] gap-5">
+  <app-filter/>
+  <div class="grid grid-cols-3 gap-5">
+    @for(product of products; track product.id){
+      <app-product-item [product]="product"></app-product-item>
+    }
+    <ul>
+      @for(type of types; track $index){
+        <li>{{type}}</li>
+      }
+    </ul>
+  </div>
+</div>
+
+

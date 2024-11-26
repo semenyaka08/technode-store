@@ -1,0 +1,21 @@
+<div class="border-b border-gray-200 py-4">
+  <div
+    class="flex items-center justify-between cursor-pointer"
+    (click)="toggleBrands()"
+  >
+    <p class="text-lg font-medium">Виробник</p>
+    <mat-icon class="transition-transform" [ngClass]="{ 'rotate-180': isBrandsOpen }">expand_more</mat-icon>
+  </div>
+
+  @if (isBrandsOpen) {
+    <div class="mt-3 space-y-2">
+      @for (brand of brands; track $index) {
+        <div class="flex items-center space-x-2">
+          <input type="checkbox" id="{{brand}}" class="form-checkbox text-indigo-600" />
+          <label for="{{brand}}" class="text-sm">{{brand}}</label>
+        </div>
+      }
+    </div>
+  }
+</div>
+

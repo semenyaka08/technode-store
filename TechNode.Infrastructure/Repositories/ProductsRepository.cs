@@ -55,5 +55,4 @@ public class ProductsRepository(ApplicationDbContext context) : IProductsReposit
             _ => z => z.Name
         };
     }
-
 }

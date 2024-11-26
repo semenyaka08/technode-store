@@ -1,0 +1,14 @@
+<mat-card class="col-span-1">
+  <img mat-card-image src="/images/{{product?.pictureUrl}}" alt="asfasfas">
+  <mat-card-content class="mt-2">
+    <h2 class="text-lg font-semibold">{{product?.name}}</h2>
+    <p class="mt-2 font-normal">{{product?.price | currency:'USD':true}}</p>
+  </mat-card-content>
+  <mat-card-actions class="mt-2">
+    <button mat-stroked-button class="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-[rgba(128,0,128,0.2)] hover:text-white focus:outline-none transition duration-300">
+      <mat-icon class="mr-2">shopping_cart</mat-icon>
+      Add to Cart
+    </button>
+  </mat-card-actions>
+</mat-card>
+

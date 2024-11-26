@@ -14,5 +14,14 @@ public class Product : BaseEntity
 
     public required string Brand { get; set; }
 
-    public int QuantityInStock { get; set; }
+    public int StockQuantity { get; set; }
+    
+    public int CategoryId { get; set; }
+
+    public Category Category { get; set; } = null!;
+
+    public ICollection<ProductSpecification> ProductSpecifications { get; set; } = [];
+    
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 }

@@ -11,7 +11,7 @@ namespace TechNode.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ProductsController(IProductsService productsService, ApplicationDbContext context) : ControllerBase
+public class ProductsController(IProductsService productsService) : ControllerBase
 {
     [HttpGet]
     public async Task<IActionResult> GetProducts([FromQuery] ProductsGetRequest request)
@@ -51,25 +51,5 @@ public class ProductsController(IProductsService productsService, ApplicationDbC
         await productsService.DeleteProductAsync(id);
         
         return NoContent();
-    }
-
-    [HttpGet("{category}")]
-    public async Task<IActionResult> GetProductsByCategory([FromRoute] string category)
-    {
-        var products = await context.Products.Where(z=> z.Type.Contains(category)).ToListAsync();
-        
-        return Ok(products);
-    }
-    
-    [HttpGet("{category}/filters/{*filters}")]
-    public async Task<IActionResult> GetProductsByCategory([FromRoute] string category, string? filters)
-    {
-        var filterList = filters?.Split('/') ?? [];
-        
-        var products = await context.Products.Where(z=> z.Type.Contains(category)).ToListAsync();
-
-        products = products.Where(z=> z.Name.ToLower().Contains(filterList[0].ToLower())).ToList();
-        
-        throw new NotImplementedException();
     }
 }

@@ -1,16 +1,31 @@
-.custom-badge .mat-badge-content {
-  width: 24px;
-  height: 24px;
-  font-size: 1rem;
-  line-height: 24px;
+.search-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 100%;
 }
 
-.custom-badge .mat-icon {
-  font-size: 32px;
-  width: 32px;
-  height: 32px;
+.search-input {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
-.mat-badge-content{
-  background-color: #7d00fa;
+button.mat-icon-button {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
 }
+
+mat-icon {
+  font-size: 20px;
+  color: #6c757d;
+}
+
+
+
+
+

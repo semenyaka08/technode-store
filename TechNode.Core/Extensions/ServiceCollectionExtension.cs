@@ -10,5 +10,6 @@ public static class ServiceCollectionExtension
     public static void AddCore(this IServiceCollection services)
     {
         services.AddScoped<IProductsService, ProductsService>();
+        services.AddScoped<ICategoryService, CategoriesService>();
     }
 }

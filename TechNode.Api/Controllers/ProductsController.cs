@@ -13,9 +13,12 @@ namespace TechNode.Api.Controllers;
 [Route("api/[controller]")]
 public class ProductsController(IProductsService productsService) : ControllerBase
 {
-    [HttpGet]
-    public async Task<IActionResult> GetProducts([FromQuery] ProductsGetRequest request)
+    [HttpGet("{category?}")]
+    public async Task<IActionResult> GetProducts([FromQuery] ProductsGetRequest request, [FromRoute] string? category = null)
     {
+        if (!string.IsNullOrEmpty(category))
+            request = request with { Category = category };
+        
         var products = await productsService.GetAllProductsAsync(request);
         
         return Ok(products);

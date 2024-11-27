@@ -1,7 +1,11 @@
 import { Component } from '@angular/core';
 import {MatBadge} from '@angular/material/badge';
 import {MatIcon} from '@angular/material/icon';
-import {MatAnchor, MatButton} from '@angular/material/button';
+import {MatAnchor, MatButton, MatIconButton} from '@angular/material/button';
+import {MatFormField} from '@angular/material/form-field';
+import {MatInput} from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+
 
 @Component({
   selector: 'app-header',
@@ -10,7 +14,11 @@ import {MatAnchor, MatButton} from '@angular/material/button';
     MatBadge,
     MatIcon,
     MatButton,
-    MatAnchor
+    MatAnchor,
+    MatFormField,
+    MatInput,
+    MatIconButton,
+    MatFormFieldModule,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'

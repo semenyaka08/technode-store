@@ -1,39 +1,20 @@
-import {Component, inject, OnInit} from '@angular/core';
-import {ShopService} from '../../core/services/shop.service';
-import {Product} from '../../shared/models/product';
-import {MatCard, MatCardImage, MatCardTitle} from '@angular/material/card';
-import {ProductItemComponent} from './product-item/product-item.component';
-import {FilterComponent} from './filters-section/filter/filter.component';
-
+import { Component } from '@angular/core';
+import {MatCard, MatCardContent, MatCardHeader} from '@angular/material/card';
+import {MatCardTitle} from '@angular/material/card';
+import {CategoriesComponent} from './categories/categories.component';
 @Component({
   selector: 'app-shop',
   imports: [
     MatCard,
+    MatCardHeader,
+    MatCardContent,
     MatCardTitle,
-    MatCardImage,
-    ProductItemComponent,
-    FilterComponent
+    CategoriesComponent,
   ],
   templateUrl: './shop.component.html',
   standalone: true,
   styleUrl: './shop.component.scss'
 })
-export class ShopComponent implements OnInit {
-  private shopService = inject(ShopService);
-  products: Product[] = [];
-  types: string[] = [];
-  brands: string[] = [];
+export class ShopComponent {
 
-  ngOnInit() {
-    this.shopService.getPage().subscribe({
-      next: data => {
-        this.products = data.items;
-
-        this.types = [...new Set(this.products.map(product => product.type))];
-
-        this.brands = [...new Set(this.products.map(product => product.brand))];
-      },
-      error: err => console.error(err)
-    })
-  }
 }

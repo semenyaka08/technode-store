@@ -11,7 +11,6 @@ public static class ServiceCollectionExtension
 {
     public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddScoped<IProductsRepository, ProductsRepository>();
         
         services.AddDbContext<ApplicationDbContext>(options =>
         {
@@ -19,5 +18,8 @@ public static class ServiceCollectionExtension
         });
         
         services.AddScoped<IDataSeeder, DataSeeder>();
+        
+        services.AddScoped<IProductsRepository, ProductsRepository>();
+        services.AddScoped<ICategoryRepository, CategoryRepository>();
     }
 }

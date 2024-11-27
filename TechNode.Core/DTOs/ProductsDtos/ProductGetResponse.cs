@@ -14,7 +14,7 @@ public class ProductGetResponse
 
     public required string Brand { get; set; }
 
-    public int QuantityInStock { get; set; }
+    public int StockQuantity { get; set; }
     
     public required string CategoryName { get; set; }
     

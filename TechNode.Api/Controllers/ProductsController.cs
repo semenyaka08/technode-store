@@ -1,10 +1,10 @@
 ﻿
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+
 using TechNode.Core.DTOs.ProductsDtos;
-using TechNode.Core.Entities;
+
 using TechNode.Core.Services.Interfaces;
-using TechNode.Infrastructure;
+
 
 
 namespace TechNode.Api.Controllers;

@@ -27,7 +27,7 @@ public class ProductsService(IProductsRepository productsRepository, ILogger<Pro
             Price = product.Price,
             PictureUrl = product.PictureUrl,
             Brand = product.Brand,
-            QuantityInStock = product.StockQuantity,
+            StockQuantity = product.StockQuantity,
             CategoryName = product.Category.Name,
             Specifications = product.ProductSpecifications.ToDictionary(x=>x.Specification.Name, x=>x.Value)
         };
@@ -47,7 +47,7 @@ public class ProductsService(IProductsRepository productsRepository, ILogger<Pro
             Price = z.Price,
             PictureUrl = z.PictureUrl,
             Brand = z.Brand,
-            QuantityInStock = z.StockQuantity,
+            StockQuantity = z.StockQuantity,
             CategoryName = z.Category.Name,
             Specifications = z.ProductSpecifications.ToDictionary(x=>x.Specification.Name, x=>x.Value)
         });

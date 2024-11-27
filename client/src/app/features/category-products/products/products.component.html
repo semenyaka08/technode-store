@@ -1,1 +1,5 @@
-<h2>Not working as expected</h2>
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+  @for(product of products; track product.id){
+    <app-product-card [product]="product"></app-product-card>
+  }
+</div>

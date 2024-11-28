@@ -1,7 +1,7 @@
 <div class="w-full bg-gray-100 p-5 shadow-md rounded-lg border-solid width-border border-purple-600">
   <mat-nav-list>
     @for (category of categories; track $index) {
-      <app-category-item [category]="category" (click)="onCategorySelected(category)"></app-category-item>
+      <app-category-item [category]="category"></app-category-item>
     }
   </mat-nav-list>
 </div>

@@ -27,8 +27,4 @@ export class CategoriesComponent implements OnInit{
       error: err => console.log(err)
     })
   }
-
-  onCategorySelected(category: Category) {
-
-  }
 }

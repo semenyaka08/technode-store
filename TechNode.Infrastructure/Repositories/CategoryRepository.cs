@@ -8,12 +8,12 @@ public class CategoryRepository(ApplicationDbContext context) : ICategoryReposit
 {
     public async Task<IEnumerable<Category>> GetAllCategoriesAsync()
     {
-        return await context.Categories.ToListAsync();
+        return await context.Categories.Include(z=>z.Specifications).ThenInclude(z=>z.ProductSpecifications).ToListAsync();
     }
 
     public async Task<Category?> GetCategoryByIdAsync(int id)
     {
-        return await context.Categories.Include(z=>z.Specifications)
+        return await context.Categories.Include(z=>z.Specifications).ThenInclude(z=>z.ProductSpecifications)
             .FirstOrDefaultAsync(z => z.Id == id);
     }
 

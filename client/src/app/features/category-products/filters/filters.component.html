@@ -1,1 +1,7 @@
-<p>filters works!</p>
+@if(filters){
+  <ul>
+    @for(filter of filters; track filter.id){
+    <app-filter-item [filter]="filter"></app-filter-item>
+    }
+  </ul>
+}

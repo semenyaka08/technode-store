@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using TechNode.Core.DTOs.CategoriesDtos;
+using TechNode.Core.DTOs.SpecificationsDtos;
 using TechNode.Core.Entities;
 using TechNode.Core.Exceptions;
 using TechNode.Core.Repositories.Interfaces;
@@ -18,7 +19,13 @@ public class CategoriesService(ICategoryRepository categoryRepository, ILogger<C
         
         return new CategoryGetResponse
         {
-            Name = category.Name
+            Id = category.Id,
+            Name = category.Name,
+            Specifications = category.Specifications.Select(z=> new SpecificationGetResponse
+            {
+                Id = z.Id,
+                Name = z.Name,
+            })
         };
     }
 
@@ -28,7 +35,19 @@ public class CategoriesService(ICategoryRepository categoryRepository, ILogger<C
 
         var categories = await categoryRepository.GetAllCategoriesAsync();
         
-        return categories.Select(z=> new CategoryGetResponse{Name = z.Name});
+        return categories.Select(z=> new CategoryGetResponse
+        {
+            Id = z.Id,
+            Name = z.Name,
+            Specifications = z.Specifications.Select(specification=> new SpecificationGetResponse
+            {
+                Id = specification.Id,
+                Name = specification.Name,
+                Values = specification.ProductSpecifications
+                    .Select(ps => ps.Value)
+                    .Distinct()
+            })
+        });
     }
 
     public Task<int> AddCategoryAsync(CategoryAddRequest addRequest)

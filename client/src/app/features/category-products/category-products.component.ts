@@ -46,6 +46,7 @@ export class CategoryProductsComponent implements OnInit{
           this.categoryService.getCategories().subscribe({
             next: (categories) => {
               this.category = categories.find(category => category.name === categoryName);
+              console.log(this.category?.specifications);
             },
             error: (error) => {console.log(error);}
           })

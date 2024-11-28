@@ -1,0 +1,35 @@
+<header class="flex items-center justify-between bg-white py-5 px-4 shadow-md gap-4">
+
+  <div class="flex items-center text-xl font-bold">
+    <a routerLink="">
+      <span>TECHNODE<span class="text-purple-600">.UA</span></span>
+    </a>
+  </div>
+
+  <div class="ml-4">
+    <button mat-button class="flex items-center bg-green-500 text-white py-2 px-4 rounded-md">
+      <mat-icon>menu</mat-icon>
+      <span class="ml-0">Catalog</span>
+    </button>
+  </div>
+
+  <div class="search-container">
+    <input
+      matInput
+      class="search-input"
+      placeholder="Search for products..."
+    />
+    <button mat-icon-button matSuffix aria-label="Clear">
+      <mat-icon>clear</mat-icon>
+    </button>
+  </div>
+
+  <div class="flex items-center space-x-2">
+    <button mat-icon-button>
+      <mat-icon>person</mat-icon>
+    </button>
+    <button mat-icon-button>
+      <mat-icon>shopping_cart</mat-icon>
+    </button>
+  </div>
+</header>

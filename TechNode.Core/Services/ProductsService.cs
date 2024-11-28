@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace TechNode.Core.Services;
 
-public class ProductsService(IProductsRepository productsRepository, ILogger<ProductsService> logger) : IProductsService
+public class ProductsService(IProductsRepository productsRepository, ILogger<ProductsService> logger, ICategoryRepository categoryRepository) : IProductsService
 {
     public async Task<ProductGetResponse> GetProductByIdAsync(int id)
     {
@@ -26,9 +26,10 @@ public class ProductsService(IProductsRepository productsRepository, ILogger<Pro
             Description = product.Description,
             Price = product.Price,
             PictureUrl = product.PictureUrl,
-            Type = product.Type,
             Brand = product.Brand,
-            QuantityInStock = product.QuantityInStock,
+            StockQuantity = product.StockQuantity,
+            CategoryName = product.Category.Name,
+            Specifications = product.ProductSpecifications.ToDictionary(x=>x.Specification.Name, x=>x.Value)
         };
     }
 
@@ -36,7 +37,7 @@ public class ProductsService(IProductsRepository productsRepository, ILogger<Pro
     {
         logger.LogInformation("Getting all products");
         
-        var (products, totalCount) = await productsRepository.GetAllProductsAsync(request.SearchPhrase, request.PageSize, request.PageNumber, request.SortBy, request.SortDirection);
+        var (products, totalCount) = await productsRepository.GetAllProductsAsync(request.SearchPhrase, request.PageSize, request.PageNumber, request.Category, request.SortBy, request.SortDirection);
         
         var mappedProducts = products.Select(z=> new ProductGetResponse
         {
@@ -45,9 +46,10 @@ public class ProductsService(IProductsRepository productsRepository, ILogger<Pro
             Description = z.Description,
             Price = z.Price,
             PictureUrl = z.PictureUrl,
-            Type = z.Type,
             Brand = z.Brand,
-            QuantityInStock = z.QuantityInStock,
+            StockQuantity = z.StockQuantity,
+            CategoryName = z.Category.Name,
+            Specifications = z.ProductSpecifications.ToDictionary(x=>x.Specification.Name, x=>x.Value)
         });
         
         return new PageResult<ProductGetResponse>(mappedProducts, totalCount, request.PageSize, request.PageNumber);
@@ -57,18 +59,40 @@ public class ProductsService(IProductsRepository productsRepository, ILogger<Pro
     {
         logger.LogInformation("Adding product {@product}", addRequest);
         
+        var category = await categoryRepository.GetCategoryByIdAsync(addRequest.CategoryId);
+        
+        if(category == null) throw new NotFoundException(nameof(Category), addRequest.CategoryId);
+        
         var product = new Product
         {
             Name = addRequest.Name,
             Description = addRequest.Description,
             Price = addRequest.Price,
             PictureUrl = addRequest.PictureUrl,
-            Type = addRequest.Type,
             Brand = addRequest.Brand,
-            QuantityInStock = addRequest.QuantityInStock,
+            StockQuantity = addRequest.StockQuantity,
+            Category = category,
+            ProductSpecifications = new List<ProductSpecification>()
         };
         
+        if (addRequest.Specifications != null)
+        {
+            foreach (var spec in category.Specifications)
+            {
+                if (addRequest.Specifications.TryGetValue(spec.Name, out var value))
+                {
+                    product.ProductSpecifications.Add(new ProductSpecification
+                    {
+                        SpecificationId = spec.Id,
+                        Value = value
+                    });
+                }
+            }
+        }
+        
         var productId = await productsRepository.AddProductAsync(product);
+        
+        logger.LogInformation("Product with ID {ProductId} added successfully.", productId);
         
         return productId;
     }
@@ -81,14 +105,50 @@ public class ProductsService(IProductsRepository productsRepository, ILogger<Pro
         
         if(product == null) throw new NotFoundException(nameof(Product), id);
         
+        if (updateRequest.CategoryId != product.CategoryId) // Проверяем, изменилась ли категория
+        {
+            var category = await categoryRepository.GetCategoryByIdAsync(updateRequest.CategoryId);
+            if (category == null)
+                throw new NotFoundException(nameof(Category), updateRequest.CategoryId);
+
+            product.CategoryId = updateRequest.CategoryId;
+        }
+        
         product.Name = updateRequest.Name;
         product.Description = updateRequest.Description;
         product.Price = updateRequest.Price;
         product.PictureUrl = updateRequest.PictureUrl;
-        product.Type = updateRequest.Type;
         product.Brand = updateRequest.Brand;
-        product.QuantityInStock = updateRequest.QuantityInStock;
+        product.StockQuantity = updateRequest.StockQuantity;
 
+        if (updateRequest.Specifications != null)
+        {
+            foreach (var (specName, specValue) in updateRequest.Specifications)
+            {
+                var existingSpec = product.ProductSpecifications
+                    .FirstOrDefault(ps => ps.Specification.Name == specName);
+
+                if (existingSpec != null)
+                {
+                    existingSpec.Value = specValue;
+                }
+                else
+                {
+                    var category = await categoryRepository.GetCategoryByIdAsync(product.CategoryId);
+                    
+                    var specEntity = category!.Specifications.FirstOrDefault(z=>z.Name == specName);
+                    if (specEntity != null)
+                    {
+                        product.ProductSpecifications.Add(new ProductSpecification
+                        {
+                            SpecificationId = specEntity.Id,
+                            Value = specValue
+                        });
+                    }
+                }
+            }
+        }
+        
         await productsRepository.SaveChangesAsync();
     }
 
@@ -101,6 +161,6 @@ public class ProductsService(IProductsRepository productsRepository, ILogger<Pro
         if(product == null) 
             throw new NotFoundException(nameof(Product), id);
         
-        productsRepository.DeleteProductAsync(product);
+        await productsRepository.DeleteProductAsync(product);
     }
 }

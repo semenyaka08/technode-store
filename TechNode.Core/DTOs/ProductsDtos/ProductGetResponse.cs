@@ -12,9 +12,11 @@ public class ProductGetResponse
 
     public required string PictureUrl { get; set; }
 
-    public required string Type { get; set; }
-
     public required string Brand { get; set; }
 
-    public int QuantityInStock { get; set; }
+    public int StockQuantity { get; set; }
+    
+    public required string CategoryName { get; set; }
+    
+    public Dictionary<string, string> Specifications { get; set; } = new();
 }

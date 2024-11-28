@@ -5,15 +5,22 @@ using TechNode.Core.Repositories.Interfaces;
 
 namespace TechNode.Infrastructure.Repositories;
 
-public class ProductsRepository(ApplicationDbContext context) : IProductsRepository
+public class ProductsRepository(ApplicationDbContext context, ICategoryRepository categoryRepository) : IProductsRepository
 {
-    public async Task<(IEnumerable<Product>, int)> GetAllProductsAsync(string? searchPhrase, int pageSize, int pageNumber ,string? sortBy, string? sortDirection)
+    public async Task<(IEnumerable<Product>, int)> GetAllProductsAsync(string? searchPhrase, int pageSize, int pageNumber, string? category, string? sortBy, string? sortDirection)
     {
-        var products = context.Products.Where(z => searchPhrase == null
+        var products = context.Products
+            .Include(c=>c.Category)
+            .Include(m=>m.ProductSpecifications)
+            .ThenInclude(v=>v.Specification)
+            .Where(z => searchPhrase == null
                                                    || z.Name.Contains(searchPhrase)
                                                    || z.Description.Contains(searchPhrase)
-                                                   || z.Type.ToString().Contains(searchPhrase)
+                                                   || z.Category.Name.Contains(searchPhrase)
                                                    || z.Brand.ToString().Contains(searchPhrase));
+        
+        if(category != null)
+            products = products.Where(z => z.Category.Name.Contains(category));
 
         int totalCount = products.Count();
 
@@ -24,7 +31,11 @@ public class ProductsRepository(ApplicationDbContext context) : IProductsReposit
 
     public async Task<Product?> GetProductByIdAsync(int id)
     {
-        return await context.Products.FindAsync(id);
+        return await context.Products
+            .Include(c=>c.Category)
+            .Include(m=>m.ProductSpecifications)
+            .ThenInclude(v=>v.Specification)
+            .FirstOrDefaultAsync(z => z.Id == id);
     }
 
     public async Task<int> AddProductAsync(Product product)
@@ -41,9 +52,11 @@ public class ProductsRepository(ApplicationDbContext context) : IProductsReposit
         await context.SaveChangesAsync();
     }
 
-    public void DeleteProductAsync(Product product)
+    public async Task DeleteProductAsync(Product product)
     {
         context.Products.Remove(product);
+        
+        await context.SaveChangesAsync();
     }
 
     private Expression<Func<Product, object>> GetSelectorKey(string? sortItem)
@@ -55,5 +68,4 @@ public class ProductsRepository(ApplicationDbContext context) : IProductsReposit
             _ => z => z.Name
         };
     }
-
 }

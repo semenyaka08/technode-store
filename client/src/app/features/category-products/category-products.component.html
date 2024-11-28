@@ -1,0 +1,11 @@
+@if(products.length > 0){
+  <div class="flex p-5 gap-4">
+    <div class="w-1/4 bg-gray-100 p-5 rounded-md shadow-md">
+      <app-filters [filters]="category?.specifications"></app-filters>
+    </div>
+
+    <div class="w-3/4 bg-white p-5 rounded-md shadow-md">
+      <app-products [products]="products"></app-products>
+    </div>
+  </div>
+}

@@ -13,18 +13,27 @@
   border-radius: 4px;
 }
 
-button.mat-icon-button {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
+.search-btn{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 mat-icon {
   font-size: 20px;
+  font-weight: 700;
   color: #6c757d;
 }
 
+mat-icon:hover{
+  cursor: pointer;
+}
+
+.search-btn:hover{
+  background-color: transparent !important;
+  box-shadow: none !important;
+  cursor: default;
+}
 
 
 

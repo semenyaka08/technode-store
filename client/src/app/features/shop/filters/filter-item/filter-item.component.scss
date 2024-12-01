@@ -1,0 +1,17 @@
+.mat-expansion-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
+.mat-expansion-panel-header mat-panel-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+*{
+  border-radius: 0 !important;
+}

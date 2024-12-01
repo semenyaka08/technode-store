@@ -37,7 +37,7 @@ public class ProductsService(IProductsRepository productsRepository, ILogger<Pro
     {
         logger.LogInformation("Getting all products");
         
-        var (products, totalCount) = await productsRepository.GetAllProductsAsync(request.SearchPhrase, request.PageSize, request.PageNumber, request.Category, request.SortBy, request.SortDirection);
+        var (products, totalCount) = await productsRepository.GetAllProductsAsync(request.SearchPhrase, request.PageSize, request.PageNumber, request.Category, request.SortBy, request.SortDirection, request.Filters);
         
         var mappedProducts = products.Select(z=> new ProductGetResponse
         {

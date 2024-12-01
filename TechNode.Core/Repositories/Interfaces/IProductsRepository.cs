@@ -4,7 +4,7 @@ namespace TechNode.Core.Repositories.Interfaces;
 
 public interface IProductsRepository
 {
-    Task<(IEnumerable<Product>, int)> GetAllProductsAsync(string? searchPhrase, int pageSize, int pageNumber, string? category ,string? sortBy, string? sortDirection);
+    Task<(IEnumerable<Product>, int)> GetAllProductsAsync(string? searchPhrase, int pageSize, int pageNumber, string? category ,string? sortBy, string? sortDirection, Dictionary<int, string[]>? filters);
     
     Task<Product?> GetProductByIdAsync(int id);
     

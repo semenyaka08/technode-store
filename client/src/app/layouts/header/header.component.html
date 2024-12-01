@@ -13,16 +13,23 @@
     </button>
   </div>
 
-  <div class="search-container">
+  <form
+    #searchForm="ngForm"
+    (ngSubmit)="onSearchChange()"
+    class="search-container">
     <input
       matInput
       class="search-input"
       placeholder="Search for products..."
+      [(ngModel)]="searchPhrase"
+      name="searchPhrase"
     />
-    <button mat-icon-button matSuffix aria-label="Clear">
-      <mat-icon>clear</mat-icon>
-    </button>
-  </div>
+    <div class="absolute right-2 ">
+      <button mat-icon-button type="submit" class="search-btn">
+        <mat-icon class="search-icon">search</mat-icon>
+      </button>
+    </div>
+  </form>
 
   <div class="flex items-center space-x-2">
     <button mat-icon-button>

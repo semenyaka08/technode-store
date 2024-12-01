@@ -7,7 +7,7 @@ namespace TechNode.Infrastructure.Repositories;
 
 public class ProductsRepository(ApplicationDbContext context, ICategoryRepository categoryRepository) : IProductsRepository
 {
-    public async Task<(IEnumerable<Product>, int)> GetAllProductsAsync(string? searchPhrase, int pageSize, int pageNumber, string? category, string? sortBy, string? sortDirection)
+    public async Task<(IEnumerable<Product>, int)> GetAllProductsAsync(string? searchPhrase, int pageSize, int pageNumber, string? category, string? sortBy, string? sortDirection, Dictionary<int, string[]>? filters)
     {
         var products = context.Products
             .Include(c=>c.Category)
@@ -22,6 +22,15 @@ public class ProductsRepository(ApplicationDbContext context, ICategoryRepositor
         if(category != null)
             products = products.Where(z => z.Category.Name.Contains(category));
 
+        if (filters != null && filters.Any())
+        {
+            foreach (var (specificationId, values) in filters)
+            {
+                products = products.Where(p => p.ProductSpecifications
+                    .Any(ps => ps.SpecificationId == specificationId && values.Select(z=>z.Replace(" ", "")).Contains(ps.Value)));
+            }
+        }
+        
         int totalCount = products.Count();
 
         products = sortDirection == "asc" ? products.OrderBy(GetSelectorKey(sortBy)) : products.OrderByDescending(GetSelectorKey(sortBy));
@@ -63,9 +72,9 @@ public class ProductsRepository(ApplicationDbContext context, ICategoryRepositor
     {
         return sortItem switch
         {
-            "name" => z => z.Name,
+            "name" => z => z.Brand,
             "price" => z => z.Price,
-            _ => z => z.Name
+            _ => z => z.Brand
         };
     }
 }

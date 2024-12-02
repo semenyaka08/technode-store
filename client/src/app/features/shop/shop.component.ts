@@ -1,7 +1,7 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, inject, Input, OnInit} from '@angular/core';
 import {ProductsService} from '../../core/services/products.service';
 import {Product} from '../../shared/models/product';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Category} from '../../shared/models/category';
 import {CategoriesService} from '../../core/services/categories.service';
 import {FiltersComponent} from './filters/filters.component';
@@ -15,6 +15,7 @@ import {PageResult} from '../../shared/models/page-result';
 import {MatPaginator, PageEvent} from '@angular/material/paginator';
 import {FormsModule} from '@angular/forms';
 import {ShopParameters} from '../../shared/models/shopParameters';
+import {firstValueFrom} from 'rxjs';
 
 @Component({
   selector: 'app-category-products',
@@ -35,82 +36,134 @@ import {ShopParameters} from '../../shared/models/shopParameters';
   standalone: true,
   styleUrl: './shop.component.scss'
 })
-export class ShopComponent implements OnInit{
+export class ShopComponent implements OnInit {
   activatedRoute = inject(ActivatedRoute);
+  router = inject(Router);
   productsService = inject(ProductsService);
   categoryService = inject(CategoriesService);
-  pageResult?: PageResult<Product>;
-  category?: Category;
-  pageSizeOptions = [3, 12, 24, 36];
+
+  pageSizeOptions = [12, 24, 36];
   sortOptions = [
     { name: "Price: Low-High", sortBy: "price", sortDirection: "asc" },
     { name: "Price: High-Low", sortBy: "price", sortDirection: "desc" },
     { name: "Name", sortBy: "name", sortDirection: "asc" }]
 
-  shopParameters: ShopParameters = {
-    paginationParams: { pageSize: 12, pageNumber: 1 },
-    selectedSort: {sortBy: "name", sortDirection: "asc"}
-  };
+  @Input() categoryName?: string; //getting categoryName from route if it is provided
+  @Input() searchPhrase?: string; //getting searchPhrase from query parameters if it is provided
 
+  category?: Category;
+  shopParameters: ShopParameters = {};
+  pageResult?: PageResult<Product>;
 
-  ngOnInit() {
-    this.loadProducts();
+  async ngOnInit(): Promise<void> {
+    this.shopParameters = {
+      categoryName: this.categoryName || '',
+      searchPhrase: this.searchPhrase || '',
+      paginationParams: {
+        pageNumber: Number(this.activatedRoute.snapshot.queryParamMap.get('pageNumber')) || 1,
+        pageSize: Number(this.activatedRoute.snapshot.queryParamMap.get('pageSize')) || 12
+      },
+      selectedSort: {
+        sortBy: this.activatedRoute.snapshot.queryParamMap.get('sortBy') || 'name',
+        sortDirection: this.activatedRoute.snapshot.queryParamMap.get('sortDirection') || 'asc'
+      },
+      filters: []
+    };
+
+    try {
+      await this.loadCategory();
+
+      this.loadFiltersFromQueryParams();
+
+      this.getProducts();
+    } catch (error) {
+      console.error('Error initializing shop component:', error);
+    }
   }
 
-  getProducts(){
-    this.productsService.getProducts(this.shopParameters).subscribe(
-      {
-        next: (pageResult) => {
-          this.pageResult = pageResult;
+  private getProducts(){
+    this.productsService.getProducts(this.shopParameters).subscribe({
+      next: (pageResult) => {
+        this.pageResult = pageResult;
+      },
+      error: (error)=> console.log(error)
+    });
+  }
 
-          if(!this.category && this.shopParameters.categoryName){
-            this.categoryService.getCategories().subscribe({
-              next: (categories) => {
-                this.category = categories.find(category => category.name === this.shopParameters.categoryName);
-              },
-              error: (error) => {console.log(error);}
-            })
-          }
-        },
-        error: (error) => {console.log(error);}
+  private async loadCategory(): Promise<void> {
+    const categories = await firstValueFrom(this.categoryService.getCategories());
+    this.category = categories.find(
+      (z) => z.name.toLowerCase() === this.categoryName?.toLowerCase()
+    );
+    if (!this.category) {
+      throw new Error(`Category ${this.categoryName} not found`);
+    }
+  }
+
+  private loadFiltersFromQueryParams(): void {
+
+    const queryParams = this.activatedRoute.snapshot.queryParamMap;
+
+    const filters: { filter: Specification, selectedValues: string[] }[] = [];
+
+    queryParams.keys.forEach((key) => {
+      const match = key.match(/Filters\[(.+)]/);
+      if (match && this.category?.specifications) {
+        const specificationId = match[1];
+        const values = queryParams.getAll(key);
+
+        const specification = this.category.specifications.find((s) => s.id.toString() === specificationId);
+        if (specification) {
+          filters.push({
+            filter: specification,
+            selectedValues: values,
+          });
+        }
       }
-    )
+    });
+    this.shopParameters.filters = filters.length > 0 ? filters : this.shopParameters.filters;
   }
 
-  loadProducts() {
-    this.shopParameters.categoryName = this.activatedRoute.snapshot.paramMap.get('category') || undefined;
+  updateQueryParams(queryParams: { [key: string]: string | undefined }): void {
+    const filteredParams = Object.keys(queryParams).reduce((acc, key) => {
+      const value = queryParams[key];
+      acc[key] = value === "" ? null : value || null;
+      return acc;
+    }, {} as { [key: string]: string | null });
 
-    if(this.shopParameters.categoryName) this.shopParameters.categoryName = this.shopParameters.categoryName?.charAt(0).toUpperCase() + this.shopParameters.categoryName?.slice(1);
-
-    this.shopParameters.searchPhrase = this.activatedRoute.snapshot.queryParamMap.get('searchPhrase') || undefined;
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: filteredParams,
+      queryParamsHandling: 'merge',
+    });
 
     this.getProducts();
   }
 
-  onFilterChange(filters: { filter: Specification, selectedValues: string[] }[]) {
-    this.shopParameters.filters = filters;
-    this.shopParameters.paginationParams.pageNumber = 1;
-    this.getProducts();
+
+  onSearchChange(): void {
+      this.shopParameters.searchPhrase = this.searchPhrase;
+
+      this.updateQueryParams({'searchPhrase': this.searchPhrase});
   }
 
-  onSortChange($event: MatSelectionListChange) {
-    const selectedOption = $event.options[0];
+  onFilterChange(selectedFilters: { filter: Specification, selectedValues: string[] }[]): void {
+    this.shopParameters.filters = selectedFilters;
+  }
+
+  onSortChange(sortEvent: MatSelectionListChange): void {
+    const selectedOption = sortEvent.options[0];
     if(selectedOption){
       this.shopParameters.selectedSort = {
         sortBy: selectedOption.value.sortBy,
-        sortDirection: selectedOption.value.sortDirection
-      }
-      this.getProducts();
+        sortDirection: selectedOption.value.sortDirection}
+      this.updateQueryParams({'sortBy': this.shopParameters.selectedSort.sortBy, 'sortDirection': this.shopParameters.selectedSort.sortDirection});
     }
   }
 
   onPageEvent($event: PageEvent) {
-    this.shopParameters.paginationParams.pageSize = $event.pageSize;
-    this.shopParameters.paginationParams.pageNumber = $event.pageIndex + 1;
-    this.getProducts();
-  }
-
-  onSearchChange() {
-    this.getProducts();
+    this.shopParameters.paginationParams!.pageSize = $event.pageSize;
+    this.shopParameters.paginationParams!.pageNumber = $event.pageIndex + 1;
+    this.updateQueryParams({'pageNumber': this.shopParameters.paginationParams!.pageNumber.toString(), 'pageSize': this.shopParameters.paginationParams!.pageSize.toString()});
   }
 }

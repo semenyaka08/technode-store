@@ -4,7 +4,7 @@ import {ShopComponent} from './features/shop/shop.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
-  { path: 'category/:category', component: ShopComponent },
+  { path: 'category/:categoryName', component: ShopComponent },
   { path: 'products', component: ShopComponent },
   { path: '**', redirectTo: '', pathMatch: 'full'},
 ];

@@ -2,6 +2,7 @@ import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Product} from '../../shared/models/product';
 import {PageResult} from '../../shared/models/page-result';
+import {ShopParameters} from '../../shared/models/shopParameters';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,43 @@ import {PageResult} from '../../shared/models/page-result';
 export class ProductsService {
   httpClient = inject(HttpClient);
 
-  getProductsByCategory(categoryName: string) {
-    return this.httpClient.get<PageResult<Product>>(`http://localhost:5104/api/products/${categoryName}`);
+  getProducts(shopParameters: ShopParameters) {
+    let url = `http://localhost:5104/api/products${shopParameters.categoryName ? `/${shopParameters.categoryName}` : ''}`;
+    const params = new URLSearchParams();
+
+    if(shopParameters.filters){
+      for (const [key, values] of Object.entries(shopParameters.filters)) {
+        for (const value of values) {
+          params.append(`filters[${key}]`, value);
+        }
+      }
+    }
+
+
+    if(shopParameters.selectedSort){
+      params.append(`sortBy`, shopParameters.selectedSort.sortBy);
+      params.append(`sortDirection`, shopParameters.selectedSort.sortDirection);
+    }
+
+    if(shopParameters.paginationParams){
+      params.append(`pageSize`, shopParameters.paginationParams.pageSize.toString());
+      params.append(`pageNumber`, shopParameters.paginationParams.pageNumber.toString());
+    }
+
+    if(shopParameters.searchPhrase){
+      params.append(`searchPhrase`, shopParameters.searchPhrase)
+    }
+
+    url += `?${params.toString()}`;
+
+    console.log(url);
+
+    return this.httpClient.get<PageResult<Product>>(url);
+  }
+
+  getProductById(productId: string){
+    let url = `http://localhost:5104/api/products/${productId}`;
+
+    return this.httpClient.get<Product>(url);
   }
 }

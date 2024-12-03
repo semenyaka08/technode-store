@@ -1,27 +1,63 @@
-<div class="flex w-full h-screen">
-  <app-categories class="w-1/4 p-5"/>
-
-  <div class="w-3/4 p-5">
-    <h2 class="text-2xl font-semibold mb-5">Акции и предложения</h2>
-    <div class="space-y-5">
-      <mat-card class="bg-indigo-50 shadow-md">
-        <mat-card-header>
-          <mat-card-title class="text-xl font-semibold">Скидка до 30% на видеокарты!</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <p class="text-gray-700">Не упустите шанс обновить свою систему по выгодной цене.</p>
-        </mat-card-content>
-      </mat-card>
-
-      <mat-card class="bg-indigo-50 shadow-md">
-        <mat-card-header>
-          <mat-card-title class="text-xl font-semibold">Купите процессор и получите скидку на материнскую плату!</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <p class="text-gray-700">Акция ограничена, спешите воспользоваться предложением.</p>
-        </mat-card-content>
-      </mat-card>
+@if(category()){
+  <div class="tools p-5">
+    <div class="flex items-center gap-2.5">
+      <h2 class="font-medium text-2xl">{{category()?.name}}</h2>
+      <span class="px-3 py-1 text-sm rounded-3xl bg-purple-600 text-white">{{pageResult()?.totalItemsCount}}</span>
+    </div>
+    <div class="flex items-center justify-between mt-4">
+      <mat-paginator class="bg-green-700 paginator"
+                     (page) = "onPageEvent($event)"
+                     [length]="pageResult()?.totalItemsCount"
+                     [pageSize]="shopParameters().paginationParams!.pageSize"
+                     [showFirstLastButtons]="true"
+                     [pageSizeOptions]="pageSizeOptions"
+                     [pageIndex]="pageResult()!.pageNumber - 1"
+                     aria-label="Select Page" />
+      <div
+        class="relative flex items-center w-full max-w-md mx-4"
+      >
+        <input
+          type="search"
+          class="block w-full p-4 text-sm text-gray-900 border border-gray-300 rounded-lg"
+          placeholder="Search for {{category()?.name?.toLowerCase()}}"
+          name="search"
+          [(ngModel)]="searchPhraseFromInputField"
+        />
+        <div class="absolute right-2 ">
+          <button [routerLink]="['.']" [queryParams]="{ searchPhrase: searchPhraseFromInputField() }" queryParamsHandling="merge" mat-icon-button class="search-btn">
+            <mat-icon class="search-icon">search</mat-icon>
+          </button>
+        </div>
+      </div>
+      <button mat-stroked-button [mat-menu-trigger-for]="sortMenu">
+        <mat-icon>swap_vert</mat-icon>
+        Sort
+      </button>
     </div>
   </div>
-</div>
+
+  <div class="flex p-5 gap-4">
+    <div class="w-1/4 shadow-md">
+      <app-filters [filters]="category()?.specifications"></app-filters>
+    </div>
+
+    <div class="w-3/4 bg-white p-5 rounded-md shadow-md">
+      <app-products [products]="pageResult()!.items"></app-products>
+    </div>
+  </div>
+}
+
+<mat-menu #sortMenu="matMenu">
+  <mat-selection-list [multiple]="false">
+    @for(sort of sortOptions; track $index){
+      <a [routerLink]="['.']" [queryParams]="{ sortBy: sort.sortBy, sortDirection: sort.sortDirection }" queryParamsHandling="merge">
+        <mat-list-option >
+          {{sort.name}}
+        </mat-list-option>
+      </a>
+    }
+  </mat-selection-list>
+</mat-menu>
+
+
 

@@ -11,7 +11,7 @@ import {MatMenu, MatMenuTrigger} from '@angular/material/menu';
 import {MatListOption, MatSelectionList} from '@angular/material/list';
 import {MatIcon} from '@angular/material/icon';
 import {PageResult} from '../../shared/models/page-result';
-import {MatPaginator} from '@angular/material/paginator';
+import {MatPaginator, PageEvent} from '@angular/material/paginator';
 import {FormsModule} from '@angular/forms';
 import {ShopParameters} from '../../shared/models/shopParameters';
 import {firstValueFrom} from 'rxjs';
@@ -49,9 +49,10 @@ export class ShopComponent implements OnInit{
   sortDirection = input<string>();
   pageNumber = input<number>();
   pageSize = input<number>();
-  filters = signal<Record<string, string[]> | undefined>(undefined);
 
+  filters = signal<Record<string, string[]> | undefined>(undefined);
   pageResult = signal<PageResult<Product> | undefined>(undefined);
+  searchPhraseFromInputField = signal<string | undefined>(undefined);
 
   shopParameters = computed(()=>{
     const shopParameters: ShopParameters = {
@@ -63,6 +64,12 @@ export class ShopComponent implements OnInit{
     }
     return shopParameters;
   });
+
+  pageSizeOptions = [12, 24, 36];
+  sortOptions = [
+    { name: "Price: Low-High", sortBy: "price", sortDirection: "asc" },
+    { name: "Price: High-Low", sortBy: "price", sortDirection: "desc" },
+    { name: "Name", sortBy: "name", sortDirection: "asc" }];
 
   constructor() {
     effect(async () => {
@@ -111,4 +118,16 @@ export class ShopComponent implements OnInit{
     this.category.set(categories.find(cat => cat.name.toLowerCase() === this.categoryName()?.toLowerCase()));
   }
 
+  onPageEvent($event: PageEvent) {
+    const pageSize = $event.pageSize;
+    const pageIndex = $event.pageIndex + 1;
+
+    this.router.navigate([], {
+      queryParams: {
+        pageSize: pageSize,
+        pageNumber: pageIndex,
+      },
+      queryParamsHandling: 'merge'
+    });
+  }
 }

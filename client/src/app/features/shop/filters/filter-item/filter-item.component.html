@@ -12,7 +12,7 @@
       <div class="flex flex-col space-y-2 p-4">
         @for(value of specification.values; track $index){
           <div class="flex gap-2.5 items-center">
-            <input type="checkbox" class="accent-purple-500" (change)="onCheckboxChange(value, $event)"
+            <input type="checkbox" class="accent-purple-500 " (change)="onCheckboxChange(value, $event)"
             />
             <span class="text-gray-700">{{ value }}</span>
           </div>

@@ -1,10 +1,13 @@
 <mat-card class="shadow-lg rounded-lg border border-gray-200 bg-white hover:bg-purple-50 transition-all card">
-  <img mat-card-image [src]="product?.pictureUrl" alt="{{ product?.name }}" class="rounded-t-lg object-cover w-full h-full pointer">
-
+  <a routerLink='/products/{{product?.id}}'>
+    <img mat-card-image [src]="product?.pictureUrl" alt="{{ product?.name }}" class="rounded-t-lg object-cover w-full h-full pointer">
+  </a>
   <mat-card-content class="p-4 mt-2">
-    <h2 class="text-lg font-bold text-gray-800 hover:text-purple-600 transition-colors pointer">
-     {{product?.brand}} {{ product?.name }}
-    </h2>
+    <a routerLink='/products/{{product?.id}}'>
+      <h2 class="text-lg font-bold text-gray-800 hover:text-purple-600 transition-colors pointer">
+        {{product?.brand}} {{ product?.name }}
+      </h2>
+    </a>
 
     <p class="text-xl font-semibold text-purple-600 mt-3">
       {{ product?.price | currency }}

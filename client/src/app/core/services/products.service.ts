@@ -39,10 +39,14 @@ export class ProductsService {
 
     url += `?${params.toString()}`;
 
-    console.log('url');
     console.log(url);
 
     return this.httpClient.get<PageResult<Product>>(url);
   }
 
+  getProductById(productId: string){
+    let url = `http://localhost:5104/api/products/${productId}`;
+
+    return this.httpClient.get<Product>(url);
+  }
 }

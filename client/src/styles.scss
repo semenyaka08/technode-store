@@ -20,3 +20,11 @@ $customTheme: mat.define-theme();
 .container {
   @apply mx-auto max-w-screen-2xl
 }
+
+.mdc-notched-outline__notch {
+  border-right-style: none !important
+}
+
+.mat-mdc-form-field-subscript-wrapper{
+  display: none !important;
+}

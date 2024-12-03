@@ -4,6 +4,7 @@ import {MatCard, MatCardActions, MatCardContent, MatCardImage} from '@angular/ma
 import {CurrencyPipe} from '@angular/common';
 import {MatButton} from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
+import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-product-card',
@@ -15,6 +16,7 @@ import { MatIcon } from '@angular/material/icon';
     MatCardActions,
     MatButton,
     MatIcon,
+    RouterLink,
   ],
   templateUrl: './product-card.component.html',
   standalone: true,

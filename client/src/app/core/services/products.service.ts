@@ -14,13 +14,14 @@ export class ProductsService {
     let url = `http://localhost:5104/api/products${shopParameters.categoryName ? `/${shopParameters.categoryName}` : ''}`;
     const params = new URLSearchParams();
 
-    if (shopParameters.filters && shopParameters.filters.length > 0) {
-      shopParameters.filters.forEach(f => {
-        f.selectedValues.forEach(value => {
-          params.append(`filters[${f.filter.id}]`, value);
-        });
-      });
+    if(shopParameters.filters){
+      for (const [key, values] of Object.entries(shopParameters.filters)) {
+        for (const value of values) {
+          params.append(`filters[${key}]`, value);
+        }
+      }
     }
+
 
     if(shopParameters.selectedSort){
       params.append(`sortBy`, shopParameters.selectedSort.sortBy);
@@ -38,7 +39,14 @@ export class ProductsService {
 
     url += `?${params.toString()}`;
 
+    console.log(url);
+
     return this.httpClient.get<PageResult<Product>>(url);
   }
 
+  getProductById(productId: string){
+    let url = `http://localhost:5104/api/products/${productId}`;
+
+    return this.httpClient.get<Product>(url);
+  }
 }

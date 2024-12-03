@@ -14,8 +14,6 @@
   </div>
 
   <form
-    #searchForm="ngForm"
-    (ngSubmit)="onSearchChange()"
     class="search-container">
     <input
       matInput
@@ -25,7 +23,7 @@
       name="searchPhrase"
     />
     <div class="absolute right-2 ">
-      <button mat-icon-button type="submit" class="search-btn">
+      <button mat-icon-button type="submit" [routerLink]="['/products']" [queryParams]="{ searchPhrase: searchPhrase() }" queryParamsHandling="merge" class="search-btn">
         <mat-icon class="search-icon">search</mat-icon>
       </button>
     </div>

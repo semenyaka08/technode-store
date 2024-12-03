@@ -1,20 +1,20 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, computed, effect, inject, input, OnInit, signal} from '@angular/core';
 import {ProductsService} from '../../core/services/products.service';
 import {Product} from '../../shared/models/product';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {Category} from '../../shared/models/category';
 import {CategoriesService} from '../../core/services/categories.service';
 import {FiltersComponent} from './filters/filters.component';
 import {ProductsComponent} from './products/products.component';
-import {Specification} from '../../shared/models/specification';
 import {MatButton, MatIconButton} from '@angular/material/button';
 import {MatMenu, MatMenuTrigger} from '@angular/material/menu';
-import {MatListOption, MatSelectionList, MatSelectionListChange} from '@angular/material/list';
+import {MatListOption, MatSelectionList} from '@angular/material/list';
 import {MatIcon} from '@angular/material/icon';
 import {PageResult} from '../../shared/models/page-result';
 import {MatPaginator, PageEvent} from '@angular/material/paginator';
 import {FormsModule} from '@angular/forms';
 import {ShopParameters} from '../../shared/models/shopParameters';
+import {firstValueFrom} from 'rxjs';
 
 @Component({
   selector: 'app-category-products',
@@ -29,7 +29,8 @@ import {ShopParameters} from '../../shared/models/shopParameters';
     MatIcon,
     MatPaginator,
     FormsModule,
-    MatIconButton
+    MatIconButton,
+    RouterLink
   ],
   templateUrl: './shop.component.html',
   standalone: true,
@@ -37,80 +38,96 @@ import {ShopParameters} from '../../shared/models/shopParameters';
 })
 export class ShopComponent implements OnInit{
   activatedRoute = inject(ActivatedRoute);
+  router = inject(Router);
   productsService = inject(ProductsService);
   categoryService = inject(CategoriesService);
-  pageResult?: PageResult<Product>;
-  category?: Category;
-  pageSizeOptions = [3, 12, 24, 36];
+
+  categoryName = input<string>();
+  category = signal<Category | undefined>(undefined);
+  searchPhrase = input<string>();
+  sortBy = input<string>();
+  sortDirection = input<string>();
+  pageNumber = input<number>();
+  pageSize = input<number>();
+
+  filters = signal<Record<string, string[]> | undefined>(undefined);
+  pageResult = signal<PageResult<Product> | undefined>(undefined);
+  searchPhraseFromInputField = signal<string | undefined>(undefined);
+
+  shopParameters = computed(()=>{
+    const shopParameters: ShopParameters = {
+      categoryName: this.categoryName(),
+      selectedSort: {sortBy: this.sortBy() ?? 'name', sortDirection: this.sortDirection() ?? 'asc'},
+      paginationParams: {pageNumber: this.pageNumber() ?? 1, pageSize: this.pageSize() ?? 12},
+      searchPhrase: this.searchPhrase(),
+      filters: this.filters()
+    }
+    return shopParameters;
+  });
+
+  pageSizeOptions = [12, 24, 36];
   sortOptions = [
     { name: "Price: Low-High", sortBy: "price", sortDirection: "asc" },
     { name: "Price: High-Low", sortBy: "price", sortDirection: "desc" },
-    { name: "Name", sortBy: "name", sortDirection: "asc" }]
+    { name: "Name", sortBy: "name", sortDirection: "asc" }];
 
-  shopParameters: ShopParameters = {
-    paginationParams: { pageSize: 12, pageNumber: 1 },
-    selectedSort: {sortBy: "name", sortDirection: "asc"}
-  };
+  constructor() {
+    effect(async () => {
+      await this.loadCategory();
+    });
 
+    effect(() => {
+      this.productsService.getProducts(this.shopParameters()).subscribe({
+        next: data=> {
+          this.pageResult.set(data);
+          console.log(this.pageResult());
+        },
+        error: err=> console.log(err)
+      });
+    });
+  }
 
   ngOnInit() {
-    this.loadProducts();
-  }
+    this.activatedRoute.queryParams.subscribe(params => {
+      const filters: Record<string, string[]> = {};
 
-  getProducts(){
-    this.productsService.getProducts(this.shopParameters).subscribe(
-      {
-        next: (pageResult) => {
-          this.pageResult = pageResult;
-
-          if(!this.category && this.shopParameters.categoryName){
-            this.categoryService.getCategories().subscribe({
-              next: (categories) => {
-                this.category = categories.find(category => category.name === this.shopParameters.categoryName);
-              },
-              error: (error) => {console.log(error);}
-            })
+      Object.keys(params).forEach(key => {
+        const match = key.match(/^filters\[(\d+)]$/);
+        if (match) {
+          const index = match[1];
+          if (!filters[index]) {
+            filters[index] = [];
           }
-        },
-        error: (error) => {console.log(error);}
-      }
-    )
+
+          const value = params[key];
+          if (Array.isArray(value)) {
+            filters[index].push(...value);
+          } else {
+            filters[index].push(value);
+          }
+        }
+      });
+
+      this.filters.set(filters);
+    });
   }
 
-  loadProducts() {
-    this.shopParameters.categoryName = this.activatedRoute.snapshot.paramMap.get('category') || undefined;
+  private async loadCategory() {
+    const categories = await firstValueFrom(this.categoryService.getCategories());
 
-    if(this.shopParameters.categoryName) this.shopParameters.categoryName = this.shopParameters.categoryName?.charAt(0).toUpperCase() + this.shopParameters.categoryName?.slice(1);
-
-    this.shopParameters.searchPhrase = this.activatedRoute.snapshot.queryParamMap.get('searchPhrase') || undefined;
-
-    this.getProducts();
-  }
-
-  onFilterChange(filters: { filter: Specification, selectedValues: string[] }[]) {
-    this.shopParameters.filters = filters;
-    this.shopParameters.paginationParams.pageNumber = 1;
-    this.getProducts();
-  }
-
-  onSortChange($event: MatSelectionListChange) {
-    const selectedOption = $event.options[0];
-    if(selectedOption){
-      this.shopParameters.selectedSort = {
-        sortBy: selectedOption.value.sortBy,
-        sortDirection: selectedOption.value.sortDirection
-      }
-      this.getProducts();
-    }
+    this.category.set(categories.find(cat => cat.name.toLowerCase() === this.categoryName()?.toLowerCase()));
   }
 
   onPageEvent($event: PageEvent) {
-    this.shopParameters.paginationParams.pageSize = $event.pageSize;
-    this.shopParameters.paginationParams.pageNumber = $event.pageIndex + 1;
-    this.getProducts();
-  }
+    const pageSize = $event.pageSize;
+    const pageIndex = $event.pageIndex + 1;
 
-  onSearchChange() {
-    this.getProducts();
+    this.router.navigate([], {
+      queryParams: {
+        pageSize: pageSize,
+        pageNumber: pageIndex,
+      },
+      queryParamsHandling: 'merge'
+    });
   }
 }

@@ -1,7 +1,7 @@
 @if(filters){
   <ul>
     @for(filter of filters; track filter.id){
-    <app-filter-item [specification]="filter" (filterChange)="onFilterChange($event)" class="rounded-none"></app-filter-item>
+    <app-filter-item [specification]="filter" class="rounded-none"></app-filter-item>
     }
   </ul>
 }

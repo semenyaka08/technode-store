@@ -1,6 +1,8 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, inject, Input} from '@angular/core';
 import {Specification} from '../../../../shared/models/specification';
 import {MatAccordion, MatExpansionPanel, MatExpansionPanelTitle, MatExpansionModule } from '@angular/material/expansion';
+import {Router, RouterLink} from '@angular/router';
+import {MatIconButton} from '@angular/material/button';
 
 @Component({
   selector: 'app-filter-item',
@@ -8,15 +10,18 @@ import {MatAccordion, MatExpansionPanel, MatExpansionPanelTitle, MatExpansionMod
     MatAccordion,
     MatExpansionPanel,
     MatExpansionPanelTitle,
-    MatExpansionModule
+    MatExpansionModule,
+    RouterLink,
+    MatIconButton
   ],
   templateUrl: './filter-item.component.html',
   standalone: true,
   styleUrl: './filter-item.component.scss'
 })
 export class FilterItemComponent {
+  router = inject(Router);
+
   @Input() specification?: Specification;
-  @Output() filterChange = new EventEmitter<{ filter: Specification, selectedValues: string[] }>();
 
   selectedValues: string[] = [];
 
@@ -29,6 +34,13 @@ export class FilterItemComponent {
     } else {
       this.selectedValues = this.selectedValues.filter(v => v !== value);
     }
-    this.filterChange.emit({ filter: this.specification!, selectedValues: this.selectedValues });
-  }
+
+    const queryParamKey = `filters[${this.specification?.id}]`;
+
+    this.router.navigate([], {
+      queryParams: {
+        [queryParamKey]: this.selectedValues,
+      },
+      queryParamsHandling: 'merge'
+    });  }
 }

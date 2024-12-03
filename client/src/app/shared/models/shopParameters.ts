@@ -1,9 +1,7 @@
-import {Specification} from './specification';
-
 export interface ShopParameters{
   categoryName? : string,
-  filters?: {filter: Specification, selectedValues: string[]} [],
+  filters?: Record<string, string[]>,
   selectedSort?: {sortBy: string, sortDirection: string},
-  paginationParams: {pageSize: number, pageNumber: number},
+  paginationParams?: {pageSize: number, pageNumber: number},
   searchPhrase?: string
 }

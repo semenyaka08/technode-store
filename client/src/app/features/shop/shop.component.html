@@ -1,87 +1,87 @@
-@if(category && pageResult){
-  <div class="tools p-5">
-    <div class="flex items-center gap-2.5">
-      <h2 class="font-medium text-2xl">{{category.name}}</h2>
-      <span class="px-3 py-1 text-sm rounded-3xl bg-purple-600 text-white">{{pageResult.totalItemsCount}}</span>
-    </div>
-    <div class="flex items-center justify-between mt-4">
-      <mat-paginator class="bg-green-700 paginator"
-      (page) = "onPageEvent($event)"
-      [length]="pageResult.totalItemsCount"
-      [pageSize]="shopParameters.paginationParams?.pageSize"
-      [showFirstLastButtons]="true"
-      [pageSizeOptions]="pageSizeOptions"
-      [pageIndex]="pageResult.pageNumber - 1"
-      aria-label="Select Page" />
+<!--@if(category && pageResult){-->
+<!--  <div class="tools p-5">-->
+<!--    <div class="flex items-center gap-2.5">-->
+<!--      <h2 class="font-medium text-2xl">{{category.name}}</h2>-->
+<!--      <span class="px-3 py-1 text-sm rounded-3xl bg-purple-600 text-white">{{pageResult.totalItemsCount}}</span>-->
+<!--    </div>-->
+<!--    <div class="flex items-center justify-between mt-4">-->
+<!--      <mat-paginator class="bg-green-700 paginator"-->
+<!--      (page) = "onPageEvent($event)"-->
+<!--      [length]="pageResult.totalItemsCount"-->
+<!--      [pageSize]="shopParameters.paginationParams?.pageSize"-->
+<!--      [showFirstLastButtons]="true"-->
+<!--      [pageSizeOptions]="pageSizeOptions"-->
+<!--      [pageIndex]="pageResult.pageNumber - 1"-->
+<!--      aria-label="Select Page" />-->
 
-      <form
-        #searchForm="ngForm"
-        (ngSubmit)="onSearchChange()"
-        class="relative flex items-center w-full max-w-md mx-4"
-      >
-        <input
-          type="search"
-          class="block w-full p-4 text-sm text-gray-900 border border-gray-300 rounded-lg"
-          placeholder="Search for {{category?.name?.toLowerCase()}}"
-          name="search"
-          [(ngModel)]="searchPhrase"
-        />
-        <div class="absolute right-2 ">
-          <button mat-icon-button type="submit" class="search-btn">
-            <mat-icon class="search-icon">search</mat-icon>
-          </button>
-        </div>
-      </form>
+<!--      <form-->
+<!--        #searchForm="ngForm"-->
+<!--        (ngSubmit)="onSearchChange()"-->
+<!--        class="relative flex items-center w-full max-w-md mx-4"-->
+<!--      >-->
+<!--        <input-->
+<!--          type="search"-->
+<!--          class="block w-full p-4 text-sm text-gray-900 border border-gray-300 rounded-lg"-->
+<!--          placeholder="Search for {{category?.name?.toLowerCase()}}"-->
+<!--          name="search"-->
+<!--          [(ngModel)]="searchPhrase"-->
+<!--        />-->
+<!--        <div class="absolute right-2 ">-->
+<!--          <button mat-icon-button type="submit" [routerLink]="['.']" [queryParams]="{searchPhrase: searchPhrase}">-->
+<!--            <mat-icon class="search-icon">search</mat-icon>-->
+<!--          </button>-->
+<!--        </div>-->
+<!--      </form>-->
 
-      <button mat-stroked-button [mat-menu-trigger-for]="sortMenu">
-        <mat-icon>swap_vert</mat-icon>
-        Sort
-      </button>
-    </div>
+<!--      <button mat-stroked-button [mat-menu-trigger-for]="sortMenu">-->
+<!--        <mat-icon>swap_vert</mat-icon>-->
+<!--        Sort-->
+<!--      </button>-->
+<!--    </div>-->
 
-  </div>
-  <div class="flex p-5 gap-4">
-    <div class="w-1/4 shadow-md">
-      <app-filters [filters]="category?.specifications" (filterChange)="onFilterChange($event)"></app-filters>
-    </div>
+<!--  </div>-->
+<!--  <div class="flex p-5 gap-4">-->
+<!--    <div class="w-1/4 shadow-md">-->
+<!--      <app-filters [filters]="category?.specifications" (filterChange)="onFilterChange($event)"></app-filters>-->
+<!--    </div>-->
 
-    <div class="w-3/4 bg-white p-5 rounded-md shadow-md">
-      <app-products [products]="pageResult.items"></app-products>
-    </div>
-  </div>
-} @else if (!category && pageResult) {
-  <div class="tools p-5">
-    <mat-paginator
-      class="bg-green-700 paginator"
-      (page)="onPageEvent($event)"
-      [length]="pageResult.totalItemsCount"
-      [pageSize]="shopParameters.paginationParams?.pageSize"
-      [showFirstLastButtons]="true"
-      [pageSizeOptions]="pageSizeOptions"
-      [pageIndex]="pageResult.pageNumber - 1"
-      aria-label="Select Page"
-    ></mat-paginator>
+<!--    <div class="w-3/4 bg-white p-5 rounded-md shadow-md">-->
+<!--      <app-products [products]="pageResult.items"></app-products>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--} @else if (!category && pageResult) {-->
+<!--  <div class="tools p-5">-->
+<!--    <mat-paginator-->
+<!--      class="bg-green-700 paginator"-->
+<!--      (page)="onPageEvent($event)"-->
+<!--      [length]="pageResult.totalItemsCount"-->
+<!--      [pageSize]="shopParameters.paginationParams?.pageSize"-->
+<!--      [showFirstLastButtons]="true"-->
+<!--      [pageSizeOptions]="pageSizeOptions"-->
+<!--      [pageIndex]="pageResult.pageNumber - 1"-->
+<!--      aria-label="Select Page"-->
+<!--    ></mat-paginator>-->
 
-    <button mat-stroked-button [mat-menu-trigger-for]="sortMenu">
-      <mat-icon>swap_vert</mat-icon>
-      Sort
-    </button>
-  </div>
+<!--    <button mat-stroked-button [mat-menu-trigger-for]="sortMenu">-->
+<!--      <mat-icon>swap_vert</mat-icon>-->
+<!--      Sort-->
+<!--    </button>-->
+<!--  </div>-->
 
-  <div class="grid grid-cols-4 gap-4 p-5">
-    <app-products [products]="pageResult.items"></app-products>
-  </div>
-}
+<!--  <div class="grid grid-cols-4 gap-4 p-5">-->
+<!--    <app-products [products]="pageResult.items"></app-products>-->
+<!--  </div>-->
+<!--}-->
 
-<mat-menu #sortMenu="matMenu">
-  <mat-selection-list [multiple]="false" (selectionChange)="onSortChange($event)">
-    @for(sort of sortOptions; track $index){
-      <mat-list-option [value]="sort" [selected]="shopParameters.selectedSort?.sortBy == sort.sortBy && shopParameters.selectedSort?.sortDirection == sort.sortDirection">
-        {{sort.name}}
-      </mat-list-option>
-    }
-  </mat-selection-list>
-</mat-menu>
+<!--<mat-menu #sortMenu="matMenu">-->
+<!--  <mat-selection-list [multiple]="false" (selectionChange)="onSortChange($event)">-->
+<!--    @for(sort of sortOptions; track $index){-->
+<!--      <mat-list-option [value]="sort" [selected]="shopParameters.selectedSort?.sortBy == sort.sortBy && shopParameters.selectedSort?.sortDirection == sort.sortDirection">-->
+<!--        {{sort.name}}-->
+<!--      </mat-list-option>-->
+<!--    }-->
+<!--  </mat-selection-list>-->
+<!--</mat-menu>-->
 
 <!--@if (category && pageResult) {-->
 <!--  <div class="tools p-5">-->
@@ -166,3 +166,7 @@
 <!--  </mat-selection-list>-->
 <!--</mat-menu>-->
 
+<h2>CategoryName: {{categoryName()}}</h2>
+<h2>category id: {{category()?.id}}</h2>
+<h2>searchPhrase: {{searchPhrase()}}</h2>
+<h2>filters {{filters()}}</h2>

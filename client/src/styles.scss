@@ -28,3 +28,15 @@ $customTheme: mat.define-theme();
 .mat-mdc-form-field-subscript-wrapper{
   display: none !important;
 }
+
+.mat-mdc-snack-bar-container.snack-error {
+  --mdc-snackbar-container-color: red;
+  --mat-snack-bar-button-color: #fff;
+  --mdc-snackbar-supporting-text-color: #fff;
+}
+
+.mat-mdc-snack-bar-container.snack-success {
+  --mdc-snackbar-container-color: green;
+  --mat-snack-bar-button-color: #fff;
+  --mdc-snackbar-supporting-text-color: #fff;
+}

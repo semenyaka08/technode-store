@@ -1,0 +1,36 @@
+.quantity-left{
+  background-color: #e6d8fc;
+  color: #7a35d3;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 0.875rem;
+}
+
+.minimal-table {
+  border-collapse: collapse;
+  border: none;
+  width: 100%;
+}
+
+.minimal-table th{
+
+}
+
+.minimal-table td {
+  border: none;
+  padding: 0.5rem 1rem;
+  vertical-align: top;
+}
+
+.key-column {
+  font-weight: bold;
+  color: #4a5568;
+  text-align: left;
+}
+
+.value-column {
+  color: #1a202c;
+  text-align: left;
+}
+

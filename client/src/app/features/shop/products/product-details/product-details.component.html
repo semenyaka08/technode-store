@@ -7,11 +7,12 @@
         </div>
 
         <div>
-          <h1 class="text-2xl font-semibold text-gray-900">{{product()?.name}}</h1>
+            <h1 class="text-2xl font-semibold text-gray-900">{{product()?.name}}</h1>
           <div class="mt-4 items-center gap-4 flex">
             <p class="text-3xl font-bold text-gray-900">
               {{product()?.price | currency}}
             </p>
+            <span class="bg-purple-100 text-purple-800 font-semibold px-2 py-1 rounded">{{stockMessage()}}</span>
           </div>
 
           <div class="flex gap-4 my-6 items-end">
@@ -22,15 +23,30 @@
 
             <mat-form-field appearance="outline" class="flex">
               <mat-label>Quantity</mat-label>
-              <input matInput type="number">
+              <input [min]="1" matInput type="number">
             </mat-form-field>
           </div>
 
           <mat-divider></mat-divider>
 
-          <p class="mt-6 text-gray-500">
-            {{product()?.description}}
-          </p>
+          <div class="mt-6">
+            <h2 class="text-lg"><span class="font-bold">Specifications </span>{{product()?.name}}</h2>
+            <table class="minimal-table table-auto w-full border-collapse border border-gray-300 mt-6">
+              <thead>
+                <tr>
+                  <th class="text-purple-700 px-4 py-2 text-left">Technical Specifications</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (spec of product()?.specifications! | keyvalue; track $index){
+                  <tr class="border-b">
+                    <td class="key-column border border-gray-300 px-4 py-2">{{ spec.key }}</td>
+                    <td class="value-column border border-gray-300 px-4 py-2">{{ spec.value }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
         </div>
 
       </div>

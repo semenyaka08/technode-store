@@ -1,7 +1,7 @@
-import {Component, effect, inject, input, signal} from '@angular/core';
+import {Component, computed, effect, inject, input, signal} from '@angular/core';
 import {ProductsService} from '../../../../core/services/products.service';
 import {Product} from '../../../../shared/models/product';
-import {CurrencyPipe} from '@angular/common';
+import {CurrencyPipe, KeyValuePipe} from '@angular/common';
 import {MatIcon} from '@angular/material/icon';
 import {MatFormField, MatLabel} from '@angular/material/form-field';
 import {MatDivider} from '@angular/material/divider';
@@ -17,7 +17,8 @@ import {MatInput} from '@angular/material/input';
     MatDivider,
     MatButton,
     MatInput,
-    MatLabel
+    MatLabel,
+    KeyValuePipe
   ],
   templateUrl: './product-details.component.html',
   standalone: true,
@@ -29,6 +30,8 @@ export class ProductDetailsComponent {
   productId = input<string>();
 
   product = signal<Product | undefined>(undefined);
+
+  stockMessage = computed(()=> this.product()?.stockQuantity! > 10 ? 'in stock' : 'running out');
 
   constructor() {
     effect(() => {

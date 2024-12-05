@@ -1,9 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using StackExchange.Redis;
 using TechNode.Core.Repositories.Interfaces;
+using TechNode.Core.Services.Interfaces;
 using TechNode.Infrastructure.Repositories;
 using TechNode.Infrastructure.Seeders;
+using TechNode.Infrastructure.Services;
 
 namespace TechNode.Infrastructure.Extensions;
 
@@ -21,5 +24,14 @@ public static class ServiceCollectionExtension
         
         services.AddScoped<IProductsRepository, ProductsRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
+
+        services.AddSingleton<IConnectionMultiplexer>(config =>
+        {
+            var connectionString = configuration.GetConnectionString("Redis");
+            if (connectionString == null) throw new Exception("Can not get redis connection string");
+            var conf = ConfigurationOptions.Parse(connectionString, true);
+            return ConnectionMultiplexer.Connect(conf);
+        });
+        services.AddSingleton<ICartService, CartService>();
     }
 }

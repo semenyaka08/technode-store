@@ -105,7 +105,7 @@ public class ProductsService(IProductsRepository productsRepository, ILogger<Pro
         
         if(product == null) throw new NotFoundException(nameof(Product), id);
         
-        if (updateRequest.CategoryId != product.CategoryId) // Проверяем, изменилась ли категория
+        if (updateRequest.CategoryId != product.CategoryId)
         {
             var category = await categoryRepository.GetCategoryByIdAsync(updateRequest.CategoryId);
             if (category == null)

@@ -6,7 +6,7 @@ namespace TechNode.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ShoppingCartController(ICartService cartService) : ControllerBase
+public class CartController(ICartService cartService) : ControllerBase
 {
     [HttpGet("{id}")]
     public async Task<IActionResult> GetShoppingCart([FromRoute] string id)

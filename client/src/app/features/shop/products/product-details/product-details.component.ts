@@ -7,6 +7,8 @@ import {MatFormField, MatLabel} from '@angular/material/form-field';
 import {MatDivider} from '@angular/material/divider';
 import {MatButton} from '@angular/material/button';
 import {MatInput} from '@angular/material/input';
+import {CartService} from '../../../../core/services/cart.service';
+import {FormsModule} from '@angular/forms';
 
 @Component({
   selector: 'app-product-details',
@@ -18,7 +20,8 @@ import {MatInput} from '@angular/material/input';
     MatButton,
     MatInput,
     MatLabel,
-    KeyValuePipe
+    KeyValuePipe,
+    FormsModule
   ],
   templateUrl: './product-details.component.html',
   standalone: true,
@@ -26,12 +29,20 @@ import {MatInput} from '@angular/material/input';
 })
 export class ProductDetailsComponent {
   productsService = inject(ProductsService);
+  cartService = inject(CartService);
 
   productId = input<string>();
 
   product = signal<Product | undefined>(undefined);
 
   stockMessage = computed(()=> this.product()?.stockQuantity! > 10 ? 'in stock' : 'running out');
+
+  quantityInCart = computed(()=>{
+    const item = this.cartService.cart()?.cartItems.find(z=>z.productId.toString() === this.productId());
+    return item?.quantity || 0
+  });
+
+  quantity = signal<number>(1);
 
   constructor() {
     effect(() => {
@@ -46,5 +57,20 @@ export class ProductDetailsComponent {
       next: data=> this.product.set(data),
       error: err => console.log(err)
     })
+  }
+
+  UpdateProductInCart(){
+    if(this.quantityInCart() < this.quantity()){
+      const itemsToAdd = this.quantity() - this.quantityInCart();
+      this.cartService.addCartItemToCart(this.product()!, itemsToAdd);
+    }
+    else{
+      const itemsToRemove = this.quantityInCart() - this.quantity();
+      this.cartService.removeItemFromCart(Number(this.productId()), itemsToRemove);
+    }
+  }
+
+  protected getButtonText(){
+    return this.quantityInCart() > 0 ? "Update cart" : "Add to cart";
   }
 }

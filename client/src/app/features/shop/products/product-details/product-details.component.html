@@ -16,14 +16,14 @@
           </div>
 
           <div class="flex gap-4 my-6 items-end">
-            <button mat-flat-button class="match-input-height">
+            <button [disabled]="quantity() === quantityInCart()" mat-flat-button class="match-input-height" (click)="UpdateProductInCart()">
               <mat-icon>shopping_cart</mat-icon>
-              Add to cart
+              {{ getButtonText() }}
             </button>
 
             <mat-form-field appearance="outline" class="flex">
               <mat-label>Quantity</mat-label>
-              <input [min]="1" matInput type="number">
+              <input [(ngModel)]="quantity" [min]="1" matInput type="number">
             </mat-form-field>
           </div>
 

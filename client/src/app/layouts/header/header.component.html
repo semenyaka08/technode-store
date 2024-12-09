@@ -29,11 +29,15 @@
   </form>
 
   <div class="flex items-center space-x-2">
-    <button mat-icon-button>
+    <a routerLink="/cart"
+       class="mt-3">
       <mat-icon>person</mat-icon>
-    </button>
-    <button mat-icon-button>
+    </a>
+    <a routerLink="/cart"
+       matBadge="{{cartService.itemsQuantity()}}"
+       matBadgeSize="large"
+       class="custom-badge mt-3">
       <mat-icon>shopping_cart</mat-icon>
-    </button>
+    </a>
   </div>
 </header>

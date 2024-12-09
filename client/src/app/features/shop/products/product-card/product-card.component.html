@@ -15,7 +15,7 @@
   </mat-card-content>
 
   <mat-card-actions align="end" class="px-4 pb-4" >
-    <button class="rounded-full bg-purple-600 text-white h-12 w-12 flex items-center justify-center hover:bg-purple-700 transition">
+    <button class="rounded-full bg-purple-600 text-white h-12 w-12 flex items-center justify-center hover:bg-purple-700 transition" (click)="cartService.addCartItemToCart(product!, 1)">
       <mat-icon class="text-xl">shopping_cart</mat-icon>
     </button>
   </mat-card-actions>

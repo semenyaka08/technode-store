@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TechNode.Core.DTOs.CategoriesDtos;
 using TechNode.Core.Services.Interfaces;
 
@@ -16,6 +17,7 @@ public class CategoriesController(ICategoryService categoryService) : Controller
         return Ok(category);
     }    
     
+    [Authorize]
     [HttpGet]
     public async Task<IActionResult> GetCategories()
     {

@@ -1,6 +1,8 @@
 using TechNode.Api.Extensions;
 using TechNode.Api.Middlewares;
+using TechNode.Core.Entities;
 using TechNode.Core.Extensions;
+using TechNode.Infrastructure;
 using TechNode.Infrastructure.Extensions;
 using TechNode.Infrastructure.Seeders;
 
@@ -12,6 +14,10 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 //Enabling CORS
 builder.Services.AddCors();
+
+builder.Services.AddAuthorization();
+builder.Services.AddIdentityApiEndpoints<AppUser>()
+    .AddEntityFrameworkStores<ApplicationDbContext>();
 
 var app = builder.Build();
 
@@ -25,8 +31,10 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseCors(z => z
     .AllowAnyMethod()
     .AllowAnyHeader()
+    .AllowCredentials()
     .WithOrigins("http://localhost:4200", "https://localhost:4200"));
 
 app.MapControllers();
+app.MapGroup("api").MapIdentityApi<AppUser>();
 
 app.Run();

@@ -11,10 +11,7 @@ public class CartController(ICartService cartService) : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetShoppingCart([FromRoute] string id)
     {
-        var cart = await cartService.GetCartAsync(id);
-
-        if (cart == null)
-            cart = new ShoppingCart{Id = id};
+        var cart = await cartService.GetCartAsync(id) ?? new ShoppingCart{Id = id};
 
         return Ok(cart);
     }

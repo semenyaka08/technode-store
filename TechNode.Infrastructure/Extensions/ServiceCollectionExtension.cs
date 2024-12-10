@@ -33,5 +33,6 @@ public static class ServiceCollectionExtension
             return ConnectionMultiplexer.Connect(conf);
         });
         services.AddSingleton<ICartService, CartService>();
+        
     }
 }

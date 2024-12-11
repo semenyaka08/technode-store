@@ -46,11 +46,15 @@ public class AccountController(SignInManager<AppUser> signInManager) : Controlle
 
         return NoContent();
     }
-
+    
     [Authorize]
     [HttpGet("user-info")]
     public async Task<IActionResult> GetUserInfo()
     {
+        var request = Request;
+        
+        Console.WriteLine(request);
+        
         var user = await signInManager.UserManager.GetUserByEmailWithAddressAsync(User);
 
         if (user == null) return Unauthorized();

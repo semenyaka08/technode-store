@@ -25,7 +25,6 @@ export class LoginComponent {
   private accountService = inject(AccountService);
   private dialogRef = inject(MatDialogRef<LoginComponent>);
 
-
   loginForm = this.fb.group({
     email: [''],
     password: ['']

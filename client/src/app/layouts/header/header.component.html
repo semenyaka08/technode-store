@@ -31,9 +31,22 @@
   <div class="flex items-center space-x-2 gap-3">
     <div class="flex items-center gap-4">
       @if (accountService.currentUser()){
-        <button mat-stroked-button (click)="logout()">
-          Logout
-        </button>
+        <a [matMenuTriggerFor]="menu" class="mt-1">
+          <mat-icon>person</mat-icon>
+        </a>
+        <mat-menu #menu="matMenu">
+          <div class="flex flex-col gap-2 px-4 py-2">
+            <button mat-menu-item>
+              <mat-icon>history</mat-icon>
+              Orders
+            </button>
+            <mat-divider />
+            <button mat-menu-item (click)="logout()">
+              <mat-icon>logout</mat-icon>
+              Logout
+            </button>
+          </div>
+        </mat-menu>
       } @else {
         <button mat-stroked-button (click)="openLoginDialog()">
           Login
@@ -43,11 +56,11 @@
         </button>
       }
     </div>
-    <a routerLink="/cart"
-       matBadge="{{cartService.itemsQuantity()}}"
-       matBadgeSize="large"
-       class="custom-badge mt-3">
-      <mat-icon >shopping_cart</mat-icon>
-    </a>
+      <a routerLink="/cart"
+         matBadge="{{cartService.itemsQuantity()}}"
+         matBadgeSize="large"
+         class="custom-badge mt-1">
+        <mat-icon >shopping_cart</mat-icon>
+      </a>
   </div>
 </header>

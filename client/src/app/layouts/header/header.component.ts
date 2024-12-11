@@ -13,6 +13,8 @@ import {MatDialog} from '@angular/material/dialog';
 import {LoginComponent} from '../../features/account/login/login.component';
 import {RegisterComponent} from '../../features/account/register/register.component';
 import {AccountService} from '../../core/services/account.service';
+import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
+import {MatDivider} from '@angular/material/divider';
 
 
 @Component({
@@ -29,6 +31,10 @@ import {AccountService} from '../../core/services/account.service';
     MatFormFieldModule,
     RouterLink,
     FormsModule,
+    MatMenu,
+    MatMenuTrigger,
+    MatMenuItem,
+    MatDivider,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
@@ -44,13 +50,13 @@ export class HeaderComponent {
 
   openLoginDialog(){
     this.dialogService.open(LoginComponent, {
-      minWidth: '400px'
+      maxWidth: '400px'
     });
   }
 
   openRegisterDialog(){
     this.dialogService.open(RegisterComponent, {
-      minWidth: '400px'
+      maxWidth: '400px'
     });
   }
 

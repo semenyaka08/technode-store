@@ -17,7 +17,6 @@ public class CategoriesController(ICategoryService categoryService) : Controller
         return Ok(category);
     }    
     
-    [Authorize]
     [HttpGet]
     public async Task<IActionResult> GetCategories()
     {

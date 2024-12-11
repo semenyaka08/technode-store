@@ -28,16 +28,26 @@
     </div>
   </form>
 
-  <div class="flex items-center space-x-2">
-    <a routerLink="/cart"
-       class="mt-3">
-      <mat-icon>person</mat-icon>
-    </a>
+  <div class="flex items-center space-x-2 gap-3">
+    <div class="flex items-center gap-4">
+      @if (accountService.currentUser()){
+        <button mat-stroked-button (click)="logout()">
+          Logout
+        </button>
+      } @else {
+        <button mat-stroked-button (click)="openLoginDialog()">
+          Login
+        </button>
+        <button mat-flat-button (click)="openRegisterDialog()">
+          Register
+        </button>
+      }
+    </div>
     <a routerLink="/cart"
        matBadge="{{cartService.itemsQuantity()}}"
        matBadgeSize="large"
        class="custom-badge mt-3">
-      <mat-icon>shopping_cart</mat-icon>
+      <mat-icon >shopping_cart</mat-icon>
     </a>
   </div>
 </header>

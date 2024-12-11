@@ -9,6 +9,12 @@ import {Router, RouterLink} from '@angular/router';
 import {FormsModule} from '@angular/forms';
 import {MatBadge} from '@angular/material/badge';
 import {CartService} from '../../core/services/cart.service';
+import {MatDialog} from '@angular/material/dialog';
+import {LoginComponent} from '../../features/account/login/login.component';
+import {RegisterComponent} from '../../features/account/register/register.component';
+import {AccountService} from '../../core/services/account.service';
+import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
+import {MatDivider} from '@angular/material/divider';
 
 
 @Component({
@@ -25,6 +31,10 @@ import {CartService} from '../../core/services/cart.service';
     MatFormFieldModule,
     RouterLink,
     FormsModule,
+    MatMenu,
+    MatMenuTrigger,
+    MatMenuItem,
+    MatDivider,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
@@ -32,6 +42,28 @@ import {CartService} from '../../core/services/cart.service';
 export class HeaderComponent {
   router = inject(Router);
   protected cartService = inject(CartService);
+  protected accountService = inject(AccountService);
+
+  private dialogService = inject(MatDialog);
 
   searchPhrase = signal<string | undefined>(undefined);
+
+  openLoginDialog(){
+    this.dialogService.open(LoginComponent, {
+      maxWidth: '400px'
+    });
+  }
+
+  openRegisterDialog(){
+    this.dialogService.open(RegisterComponent, {
+      maxWidth: '400px'
+    });
+  }
+
+  logout() {
+    this.accountService.logout().subscribe({
+      next: ()=> this.accountService.currentUser.set(null)
+    });
+
+  }
 }

@@ -6,6 +6,7 @@ import {NotFoundComponent} from './shared/components/not-found/not-found.compone
 import {ServerErrorComponent} from './shared/components/server-error/server-error.component';
 import {CartComponent} from './features/cart/cart.component';
 import {CheckoutComponent} from './features/checkout/checkout.component';
+import {emptyCardGuard} from './core/guards/emptyCard.guard';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -13,7 +14,7 @@ export const routes: Routes = [
   { path: 'products', component: ShopComponent },
   { path: 'products/:productId', component: ProductDetailsComponent },
   { path: 'cart', component: CartComponent},
-  { path: 'checkout', component: CheckoutComponent},
+  { path: 'checkout', component: CheckoutComponent, canActivate: [emptyCardGuard]},
   { path: 'not-found', component: NotFoundComponent},
   { path: 'server-error', component: ServerErrorComponent},
   { path: '**', redirectTo: 'not-found', pathMatch: 'full'},

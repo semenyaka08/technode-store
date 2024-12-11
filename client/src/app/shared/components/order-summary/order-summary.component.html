@@ -19,7 +19,7 @@
       <p class="text-base font-medium">Total</p>
       <p class="text-base font-semibold">{{cartService.totals()?.total | currency}}</p>
     </div>
-    <button mat-button class="!text-sm !font-medium !text-white !bg-purple-600">
+    <button mat-button class="!text-sm !font-medium !text-white !bg-purple-600" (click)="onCheckout()">
       Checkout
     </button>
     <button mat-button class="!text-sm !font-medium">

@@ -24,7 +24,9 @@ public static class ServiceCollectionExtension
         
         services.AddScoped<IProductsRepository, ProductsRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
-
+        services.AddScoped<IDeliveryMethodRepository, DeliveryMethodRepository>();
+        services.AddScoped<IPaymentService, PaymentService>();
+        
         services.AddSingleton<IConnectionMultiplexer>(config =>
         {
             var connectionString = configuration.GetConnectionString("Redis");
@@ -33,6 +35,5 @@ public static class ServiceCollectionExtension
             return ConnectionMultiplexer.Connect(conf);
         });
         services.AddSingleton<ICartService, CartService>();
-        
     }
 }

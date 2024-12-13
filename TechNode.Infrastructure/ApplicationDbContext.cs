@@ -12,6 +12,8 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<
 
     public DbSet<ProductSpecification> ProductSpecifications { get; set; }
 
+    public DbSet<DeliveryMethod> DeliveryMethods { get; set; }
+
     public DbSet<Specification> Specifications { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

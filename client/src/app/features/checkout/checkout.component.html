@@ -16,7 +16,13 @@
               <button matStepperNext mat-flat-button>Next</button>
             </div>
           </mat-step>
-          <mat-step label="Payment">Payment form</mat-step>
+          <mat-step label="Payment">
+            <div id="payment-element"></div>
+            <div class="flex justify-between mt-5">
+              <button matStepperPrevious mat-stroked-button>Back</button>
+              <button matStepperNext mat-flat-button>Next</button>
+            </div>
+          </mat-step>
           <mat-step label="Confirmation">Review</mat-step>
         </mat-stepper>
     </div>

@@ -4,7 +4,7 @@ import {
   Stripe,
   StripeAddressElement,
   StripeAddressElementOptions,
-  StripeElements,
+  StripeElements, StripePaymentElement,
 } from '@stripe/stripe-js';
 import {environment} from '../../../environments/environment';
 import {CartService} from './cart.service';
@@ -25,6 +25,7 @@ export class StripeService {
   private httpClient = inject(HttpClient);
   elements?: StripeElements;
   addressElement? : StripeAddressElement;
+  paymentElement?: StripePaymentElement;
   private accountService = inject(AccountService);
 
   constructor() {
@@ -76,6 +77,17 @@ export class StripeService {
     }
 
     return this.addressElement;
+  }
+
+  async createPaymentElement(){
+    if(!this.paymentElement){
+      const elements = await this.initializeElements();
+      if(!elements)
+        throw new Error("Some problems with loading stripe elements");
+      this.paymentElement = elements.create("payment");
+    }
+
+    return this.paymentElement;
   }
 
   createOrUpdatePaymentIntent(){

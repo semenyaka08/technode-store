@@ -20,11 +20,11 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
           }
           throw modelStateErrors.flat();
         }else{
-          snackbar.error();
+          snackbar.error(err.error.title || err.error);
         }
       }
       if(err.status === 401){
-        snackbar.error();
+        snackbar.error(err.error.title || err.error);
       }
       if(err.status === 404){
         router.navigateByUrl('/not-found');

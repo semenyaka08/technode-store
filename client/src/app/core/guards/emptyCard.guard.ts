@@ -9,7 +9,7 @@ export const emptyCardGuard: CanActivateFn = () => {
   const snackService = inject(SnackbarService);
 
   if(!cartService.cart()?.cartItems || cartService.cart()?.cartItems.length === 0){
-    snackService.error();
+    snackService.error('Your cart is empty');
     router.navigateByUrl('/cart');
     return false;
   }

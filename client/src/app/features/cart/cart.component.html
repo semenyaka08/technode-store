@@ -1,5 +1,5 @@
 <section>
-  <div class="flex gap-2">
+  <div class="flex gap-4">
     <div class="flex flex-col gap-1 mx-auto w-3/4">
       @for (item of cartService.cart()?.cartItems; track item.productId){
         <app-cart-item [item]="item"/>

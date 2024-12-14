@@ -1,4 +1,4 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, inject, OnInit, output} from '@angular/core';
 import {DeliveryMethod} from '../../../shared/models/delivery-method';
 import {CheckoutService} from '../../../core/services/checkout.service';
 import {MatRadioButton, MatRadioGroup} from '@angular/material/radio';
@@ -22,6 +22,7 @@ export class DeliveryComponent implements OnInit{
   private checkoutService = inject(CheckoutService);
   protected cartService = inject(CartService);
   deliveryMethods: DeliveryMethod[] = [];
+  isDelivered = output<boolean>();
 
   ngOnInit() {
     this.checkoutService.getDeliveryMethods().subscribe({
@@ -29,8 +30,11 @@ export class DeliveryComponent implements OnInit{
         this.deliveryMethods = data;
         if(this.cartService.cart()?.deliveryMethodId){
           const deliveryMethod = data.find(z=> z.id === Number(this.cartService.cart()?.deliveryMethodId));
-          if(deliveryMethod)
+          if(deliveryMethod){
             this.cartService.deliveryMethod.set(deliveryMethod);
+            this.isDelivered.emit(true);
+          }
+
         }
       },
       error: () => console.log("some problems with loading delivery methods")
@@ -43,6 +47,7 @@ export class DeliveryComponent implements OnInit{
     if(cart){
       cart.deliveryMethodId = method.id.toString();
       this.cartService.setCart(cart);
+      this.isDelivered.emit(true);
     }
   }
 }

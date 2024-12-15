@@ -17,7 +17,7 @@ public class ProductsService(IProductsRepository productsRepository, ILogger<Pro
         var product = await productsRepository.GetProductByIdAsync(id);
         
         if(product == null) 
-            throw new NotFoundException(nameof(Product), id);
+            throw new NotFoundException(nameof(Product), id.ToString());
         
         return new ProductGetResponse
         {
@@ -61,7 +61,7 @@ public class ProductsService(IProductsRepository productsRepository, ILogger<Pro
         
         var category = await categoryRepository.GetCategoryByIdAsync(addRequest.CategoryId);
         
-        if(category == null) throw new NotFoundException(nameof(Category), addRequest.CategoryId);
+        if(category == null) throw new NotFoundException(nameof(Category), addRequest.CategoryId.ToString());
         
         var product = new Product
         {
@@ -103,13 +103,13 @@ public class ProductsService(IProductsRepository productsRepository, ILogger<Pro
         
         var product = await productsRepository.GetProductByIdAsync(id);
         
-        if(product == null) throw new NotFoundException(nameof(Product), id);
+        if(product == null) throw new NotFoundException(nameof(Product), id.ToString());
         
         if (updateRequest.CategoryId != product.CategoryId)
         {
             var category = await categoryRepository.GetCategoryByIdAsync(updateRequest.CategoryId);
             if (category == null)
-                throw new NotFoundException(nameof(Category), updateRequest.CategoryId);
+                throw new NotFoundException(nameof(Category), updateRequest.CategoryId.ToString());
 
             product.CategoryId = updateRequest.CategoryId;
         }
@@ -159,7 +159,7 @@ public class ProductsService(IProductsRepository productsRepository, ILogger<Pro
         var product = await productsRepository.GetProductByIdAsync(id);
         
         if(product == null) 
-            throw new NotFoundException(nameof(Product), id);
+            throw new NotFoundException(nameof(Product), id.ToString());
         
         await productsRepository.DeleteProductAsync(product);
     }

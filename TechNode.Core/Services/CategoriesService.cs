@@ -15,7 +15,7 @@ public class CategoriesService(ICategoryRepository categoryRepository, ILogger<C
         var category = await categoryRepository.GetCategoryByIdAsync(categoryId);
 
         if(category == null)
-            throw new NotFoundException(nameof(Category), categoryId);
+            throw new NotFoundException(nameof(Category), categoryId.ToString());
         
         return new CategoryGetResponse
         {
@@ -66,7 +66,7 @@ public class CategoriesService(ICategoryRepository categoryRepository, ILogger<C
         var category = await categoryRepository.GetCategoryByIdAsync(categoryId);
         
         if(category == null)
-            throw new NotFoundException(nameof(Category), categoryId);
+            throw new NotFoundException(nameof(Category), categoryId.ToString());
         
         category.Name = updateRequest.Name;
 
@@ -80,7 +80,7 @@ public class CategoriesService(ICategoryRepository categoryRepository, ILogger<C
         var category = await categoryRepository.GetCategoryByIdAsync(categoryId);
         
         if(category == null)
-            throw new NotFoundException(nameof(Category), categoryId);
+            throw new NotFoundException(nameof(Category), categoryId.ToString());
         
         categoryRepository.DeleteCategoryAsync(category);
     }

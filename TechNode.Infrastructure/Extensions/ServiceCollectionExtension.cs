@@ -26,6 +26,7 @@ public static class ServiceCollectionExtension
         services.AddScoped<ICategoryRepository, CategoryRepository>();
         services.AddScoped<IDeliveryMethodRepository, DeliveryMethodRepository>();
         services.AddScoped<IPaymentService, PaymentService>();
+        services.AddScoped<IOrderRepository, OrderRepository>();
         
         services.AddSingleton<IConnectionMultiplexer>(config =>
         {

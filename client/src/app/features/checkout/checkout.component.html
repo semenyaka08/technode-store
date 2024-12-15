@@ -24,14 +24,19 @@
             </div>
           </mat-step>
           <mat-step label="Confirmation">
-            <app-review></app-review>
+            <app-review [confirmationToken]="confirmationToken"></app-review>
             <div class="flex justify-between mt-5">
               <button matStepperPrevious mat-stroked-button>Back</button>
-              <button matStepperNext mat-flat-button>Confirm payment</button>
+              <button [disabled]="!confirmationToken || loading" (click)="confirmPayment(stepper)" matStepperNext mat-flat-button>
+                @if(loading){
+                  <mat-spinner diameter="20"></mat-spinner>
+                }@else{
+                  <span>Confirm payment</span>
+                }
+              </button>
             </div>
           </mat-step>
         </mat-stepper>
-      <pre>{{completionStatus() | json}}</pre>
     </div>
     <div class="w-1/4">
       <app-order-summary />

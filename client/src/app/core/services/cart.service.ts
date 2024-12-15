@@ -48,8 +48,8 @@ export class CartService {
     })
   }
 
-  deleteCart(key: string){
-    this.httpClient.delete(this.apiUrl + `cart/${key}`).subscribe({
+  deleteCart(){
+    this.httpClient.delete(this.apiUrl + `cart/${this.cart()?.id}`).subscribe({
       next: ()=>localStorage.removeItem('cart_id'),
       error: ()=>console.log("unable to find the cart with given key")
     })
@@ -83,7 +83,7 @@ export class CartService {
       else
         cart.cartItems.splice(productIndex, 1);
       if(cart.cartItems.length === 0)
-        this.deleteCart(cart.id);
+        this.deleteCart();
       else
         this.setCart(cart);
     }

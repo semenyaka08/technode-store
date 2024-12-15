@@ -7,6 +7,7 @@ import {ServerErrorComponent} from './shared/components/server-error/server-erro
 import {CartComponent} from './features/cart/cart.component';
 import {CheckoutComponent} from './features/checkout/checkout.component';
 import {emptyCardGuard} from './core/guards/emptyCard.guard';
+import {CheckoutSuccessComponent} from './features/checkout/checkout-success/checkout-success.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -15,6 +16,7 @@ export const routes: Routes = [
   { path: 'products/:productId', component: ProductDetailsComponent },
   { path: 'cart', component: CartComponent},
   { path: 'checkout', component: CheckoutComponent, canActivate: [emptyCardGuard]},
+  { path: 'checkout/success', component: CheckoutSuccessComponent},
   { path: 'not-found', component: NotFoundComponent},
   { path: 'server-error', component: ServerErrorComponent},
   { path: '**', redirectTo: 'not-found', pathMatch: 'full'},

@@ -5,6 +5,7 @@ import {Cart, CartItem} from '../../shared/models/cart';
 import {nanoid} from 'nanoid';
 import {Product} from '../../shared/models/product';
 import {map} from 'rxjs';
+import {DeliveryMethod} from '../../shared/models/delivery-method';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,7 @@ export class CartService {
   apiUrl = environment.apiUrl;
   httpClient = inject(HttpClient);
 
+  deliveryMethod = signal<DeliveryMethod | undefined>(undefined);
   cart = signal<Cart | undefined>(undefined);
   itemsQuantity = computed(()=>this.cart()?.cartItems.reduce((sum, item) => sum + item.quantity, 0));
   totals = computed(()=>{
@@ -21,7 +23,7 @@ export class CartService {
 
     const subTotal = cart.cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
     const discount = 0;
-    const deliveryFee = 0;
+    const deliveryFee = this.deliveryMethod() ? this.deliveryMethod()!.price : 0;
 
     return {
       subTotal,
@@ -46,8 +48,8 @@ export class CartService {
     })
   }
 
-  deleteCart(key: string){
-    this.httpClient.delete(this.apiUrl + `cart/${key}`).subscribe({
+  deleteCart(){
+    this.httpClient.delete(this.apiUrl + `cart/${this.cart()?.id}`).subscribe({
       next: ()=>localStorage.removeItem('cart_id'),
       error: ()=>console.log("unable to find the cart with given key")
     })
@@ -81,7 +83,7 @@ export class CartService {
       else
         cart.cartItems.splice(productIndex, 1);
       if(cart.cartItems.length === 0)
-        this.deleteCart(cart.id);
+        this.deleteCart();
       else
         this.setCart(cart);
     }

@@ -2,14 +2,14 @@ export interface User{
   firstName: string,
   lastName: string,
   email: string,
-  address: Address
+  userAddress: Address
 }
 
 export interface Address{
-  Line1: string,
-  Line2?: string,
-  City: string,
-  State: string,
-  PostalCode: string,
-  Country: string
+  line1: string,
+  line2?: string,
+  city: string,
+  state: string,
+  postalCode: string,
+  country: string
 }

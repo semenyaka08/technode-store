@@ -1,1 +1,45 @@
-<p>this text should be able to see only authorized users</p>
+<section>
+  <div class="flex gap-4">
+    <div class="flex flex-col gap-1 mx-auto w-3/4">
+        <mat-stepper [linear]="true" (selectionChange)="onStepChange($event)" #stepper class="bg-white border border-gray-200 shadow-sm">>
+          <mat-step label="Address" [completed]="completionStatus().address">
+            <div id="address-element"></div>
+            <div class="flex justify-between mt-5">
+              <button routerLink="/home" mat-stroked-button>Continue Shopping</button>
+              <button [disabled]="!completionStatus().address" matStepperNext mat-flat-button>Next</button>
+            </div>
+          </mat-step>
+          <mat-step label="Shipping" [completed]="completionStatus().deliveryMethod">
+            <app-delivery (isDelivered)="onDeliveryStatusChange($event)"></app-delivery>
+            <div class="flex justify-between mt-5">
+              <button matStepperPrevious mat-stroked-button>Back</button>
+              <button [disabled]="!completionStatus().deliveryMethod" matStepperNext mat-flat-button>Next</button>
+            </div>
+          </mat-step>
+          <mat-step label="Payment" [completed]="completionStatus().payment">
+            <div id="payment-element"></div>
+            <div class="flex justify-between mt-5">
+              <button matStepperPrevious mat-stroked-button>Back</button>
+              <button [disabled]="!completionStatus().payment" matStepperNext mat-flat-button>Next</button>
+            </div>
+          </mat-step>
+          <mat-step label="Confirmation">
+            <app-review [confirmationToken]="confirmationToken"></app-review>
+            <div class="flex justify-between mt-5">
+              <button matStepperPrevious mat-stroked-button>Back</button>
+              <button [disabled]="!confirmationToken || loading" (click)="confirmPayment(stepper)" matStepperNext mat-flat-button>
+                @if(loading){
+                  <mat-spinner diameter="20"></mat-spinner>
+                }@else{
+                  <span>Confirm payment</span>
+                }
+              </button>
+            </div>
+          </mat-step>
+        </mat-stepper>
+    </div>
+    <div class="w-1/4">
+      <app-order-summary />
+    </div>
+  </div>
+</section>

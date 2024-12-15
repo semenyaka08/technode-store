@@ -11,5 +11,6 @@ public static class ServiceCollectionExtension
     {
         services.AddScoped<IProductsService, ProductsService>();
         services.AddScoped<ICategoryService, CategoriesService>();
+        services.AddScoped<IOrdersService, OrdersService>();
     }
 }

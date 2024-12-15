@@ -12,7 +12,7 @@ public static class ClaimPrincipleExtensions
         return await userManager.Users.FirstOrDefaultAsync(z=>z.Email == claimsPrincipal.GetEmail());
     }
 
-    private static string? GetEmail(this ClaimsPrincipal claimsPrincipal)
+    public static string? GetEmail(this ClaimsPrincipal claimsPrincipal)
     {
         return claimsPrincipal.FindFirstValue(ClaimTypes.Email);
     }

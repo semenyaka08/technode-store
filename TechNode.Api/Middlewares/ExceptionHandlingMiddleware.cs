@@ -13,7 +13,21 @@ public class ExceptionHandlingMiddleware(ILogger<ExceptionHandlingMiddleware> lo
         catch (NotFoundException exception)
         {
             context.Response.StatusCode = 404;
-            
+
+            await context.Response.WriteAsync(exception.Message);
+            logger.LogWarning(exception.Message);
+        }
+        catch (MissingPaymentIntentException exception)
+        {
+            context.Response.StatusCode = 400;
+
+            await context.Response.WriteAsync(exception.Message);
+            logger.LogWarning(exception.Message);
+        }
+        catch (MissingDeliveryException exception)
+        {
+            context.Response.StatusCode = 400;
+
             await context.Response.WriteAsync(exception.Message);
             logger.LogWarning(exception.Message);
         }

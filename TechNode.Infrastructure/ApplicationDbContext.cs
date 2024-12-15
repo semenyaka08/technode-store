@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using TechNode.Core.Entities;
+using TechNode.Core.Entities.OrderAggregate;
 
 namespace TechNode.Infrastructure;
 
@@ -15,6 +16,10 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<
     public DbSet<DeliveryMethod> DeliveryMethods { get; set; }
 
     public DbSet<Specification> Specifications { get; set; }
+
+    public DbSet<Order> Orders { get; set; }
+
+    public DbSet<OrderItem> OrderItems { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -142,7 +142,7 @@ export class CheckoutComponent implements OnInit, OnDestroy{
       throw new Error("problems with loading order model");
 
     const orderModel: OrderToCreate = {
-      cartId: +cartId,
+      cartId: cartId,
       deliveryMethodId: +deliveryMethodId,
       shippingAddress: shippingAddress,
       paymentSummary: {

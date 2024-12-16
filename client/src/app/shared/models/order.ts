@@ -37,7 +37,7 @@ export interface ShippingAddress {
 }
 
 export interface OrderToCreate{
-  cartId: number,
+  cartId: string,
   deliveryMethodId: number,
   paymentSummary: PaymentSummary,
   shippingAddress: ShippingAddress

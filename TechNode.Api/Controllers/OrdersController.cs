@@ -20,8 +20,8 @@ public class OrdersController(IOrdersService ordersService) : ControllerBase
             return BadRequest("Current user has no email");
         
         int orderId = await ordersService.AddOrderAsync(orderCreateRequest, userEmail);
-
-        return CreatedAtAction(nameof(GetOrderById), new { orderId }, new { orderId });
+        
+        return CreatedAtAction(nameof(GetOrderById), new { id = orderId }, new { orderId });
     }
 
     [HttpGet("{id:int}")]

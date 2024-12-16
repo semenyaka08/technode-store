@@ -48,12 +48,6 @@ export class HeaderComponent {
 
   searchPhrase = signal<string | undefined>(undefined);
 
-  openLoginDialog(){
-    this.dialogService.open(LoginComponent, {
-      maxWidth: '400px'
-    });
-  }
-
   openRegisterDialog(){
     this.dialogService.open(RegisterComponent, {
       maxWidth: '400px'

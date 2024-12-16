@@ -25,25 +25,5 @@ import {LoginComponent} from '../../../features/account/login/login.component';
 })
 export class OrderSummaryComponent {
   protected cartService = inject(CartService);
-  private router = inject(Router);
-  private accountService = inject(AccountService);
-  private dialog = inject(MatDialog);
   protected location = inject(Location);
-
-  onCheckout() {
-    if(this.accountService.currentUser()){
-      this.router.navigate(['/checkout']);
-    }
-    else{
-      const dialogRef = this.dialog.open(LoginComponent, {
-        width: '400px'
-      });
-
-      dialogRef.afterClosed().subscribe(() => {
-        if (this.accountService.currentUser()) {
-          this.router.navigate(['/checkout']);
-        }
-      });
-    }
-  }
 }

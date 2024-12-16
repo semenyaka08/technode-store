@@ -1,13 +1,13 @@
 import {Component, inject} from '@angular/core';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {AccountService} from '../../../core/services/account.service';
-import {MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {LoginComponent} from '../login/login.component';
 import {MatError, MatFormField, MatLabel} from '@angular/material/form-field';
 import {MatButton} from '@angular/material/button';
 import {MatInput} from '@angular/material/input';
 import {SnackbarService} from '../../../core/services/snackbar.service';
 import {JsonPipe} from '@angular/common';
+import {Router} from '@angular/router';
+import {MatCard} from '@angular/material/card';
 
 @Component({
   selector: 'app-register',
@@ -18,7 +18,8 @@ import {JsonPipe} from '@angular/common';
     MatButton,
     MatInput,
     JsonPipe,
-    MatError
+    MatError,
+    MatCard
   ],
   templateUrl: './register.component.html',
   standalone: true,
@@ -28,9 +29,8 @@ export class RegisterComponent {
   private fb = inject(FormBuilder);
 
   private accountService = inject(AccountService);
-  private dialog = inject(MatDialog);
-  private dialogRef = inject(MatDialogRef<RegisterComponent>);
   private snack = inject(SnackbarService);
+  private router = inject(Router);
   protected validationErrors? : string[];
 
   registerForm = this.fb.group({
@@ -40,12 +40,11 @@ export class RegisterComponent {
     password: ['', Validators.required]
   });
 
-  onSubmit(){
+  async onSubmit(){
     this.accountService.register(this.registerForm.value).subscribe({
       next: ()=>{
-        this.snack.success("Registration successful - you can now login")
-        this.dialogRef.close();
-        this.dialog.open(LoginComponent, {maxWidth: "400px"});
+        this.snack.success("Registration successful - you can now login");
+        this.router.navigateByUrl('');
       },
       error: err => this.validationErrors = err
     })

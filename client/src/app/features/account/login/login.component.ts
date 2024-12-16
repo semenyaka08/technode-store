@@ -4,7 +4,8 @@ import {AccountService} from '../../../core/services/account.service';
 import {MatFormField, MatLabel} from '@angular/material/form-field';
 import {MatInput} from '@angular/material/input';
 import {MatButton} from '@angular/material/button';
-import {MatDialogRef} from '@angular/material/dialog';
+import {ActivatedRoute, Router} from '@angular/router';
+import {MatCard} from '@angular/material/card';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +14,8 @@ import {MatDialogRef} from '@angular/material/dialog';
     MatFormField,
     MatInput,
     MatButton,
-    MatLabel
+    MatLabel,
+    MatCard
   ],
   templateUrl: './login.component.html',
   standalone: true,
@@ -23,19 +25,27 @@ export class LoginComponent {
   private fb = inject(FormBuilder);
 
   private accountService = inject(AccountService);
-  private dialogRef = inject(MatDialogRef<LoginComponent>);
+  private router = inject(Router);
+  private activatedRoute = inject(ActivatedRoute);
+  private readonly returnUrl = '';
+
+  constructor() {
+    const url = this.activatedRoute.snapshot.queryParams['returnUrl'];
+    if(url)
+      this.returnUrl = url;
+  }
 
   loginForm = this.fb.group({
     email: [''],
     password: ['']
   });
 
-  onSubmit(){
+  async onSubmit(){
     this.accountService.login(this.loginForm.value).subscribe({
       next: ()=> {
         this.accountService.getCurrentUser().subscribe(isSuccess=>{
           if(isSuccess)
-            this.dialogRef.close();
+             this.router.navigateByUrl(this.returnUrl);
         });
       }
     })

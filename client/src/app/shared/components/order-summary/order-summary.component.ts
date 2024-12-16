@@ -4,10 +4,7 @@ import {MatButton} from '@angular/material/button';
 import {MatFormField, MatLabel} from '@angular/material/form-field';
 import {MatInput} from '@angular/material/input';
 import {CartService} from '../../../core/services/cart.service';
-import {Router, RouterLink} from '@angular/router';
-import {AccountService} from '../../../core/services/account.service';
-import {MatDialog} from '@angular/material/dialog';
-import {LoginComponent} from '../../../features/account/login/login.component';
+import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-order-summary',

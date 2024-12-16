@@ -8,6 +8,8 @@ import {CartComponent} from './features/cart/cart.component';
 import {CheckoutComponent} from './features/checkout/checkout.component';
 import {emptyCardGuard} from './core/guards/emptyCard.guard';
 import {CheckoutSuccessComponent} from './features/checkout/checkout-success/checkout-success.component';
+import {OrdersComponent} from './features/orders/orders.component';
+import {OrderDetailsComponent} from './features/orders/order-details/order-details.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -16,6 +18,8 @@ export const routes: Routes = [
   { path: 'products/:productId', component: ProductDetailsComponent },
   { path: 'cart', component: CartComponent},
   { path: 'checkout', component: CheckoutComponent, canActivate: [emptyCardGuard]},
+  { path: 'orders', component: OrdersComponent},
+  { path: 'orders/:orderId', component: OrderDetailsComponent},
   { path: 'checkout/success', component: CheckoutSuccessComponent},
   { path: 'not-found', component: NotFoundComponent},
   { path: 'server-error', component: ServerErrorComponent},

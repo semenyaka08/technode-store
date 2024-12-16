@@ -25,14 +25,14 @@ public class OrdersController(IOrdersService ordersService) : ControllerBase
     }
 
     [HttpGet("{id:int}")]
-    public async Task<IActionResult> GetOrderById([FromRoute] int orderId)
+    public async Task<IActionResult> GetOrderById([FromRoute] int id)
     {
         string? userEmail = User.GetEmail();
         
         if (userEmail == null)
             return BadRequest("Current user has no email");
 
-        var order = await ordersService.GetOrderByIdAsync(orderId, userEmail);
+        var order = await ordersService.GetOrderByIdAsync(id, userEmail);
 
         return Ok(order);
     }

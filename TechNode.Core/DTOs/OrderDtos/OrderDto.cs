@@ -9,7 +9,7 @@ public class OrderDto
     
     public DateTime OrderCreated { get; set; }
 
-    public OrderStatus OrderStatus { get; set; }
+    public required string OrderStatus { get; set; }
 
     public required string BuyerEmail { get; set; }
 
@@ -24,4 +24,6 @@ public class OrderDto
     public decimal Subtotal { get; set; }
     
     public required string PaymentIntendId { get; set; }
+
+    public required decimal Total { get; set; }
 }

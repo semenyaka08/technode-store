@@ -1,1 +1,36 @@
-<p>orders works!</p>
+<section>
+  @if (orders()){
+    <div class="container mx-auto">
+      <h1 class="text-2xl font-bold mb-4">Orders</h1>
+      <div class="overflow-x-auto">
+        <table class="min-w-full border-collapse border border-gray-300 bg-white rounded-lg shadow-lg">
+          <thead>
+            <tr class="bg-gray-200 text-gray-700">
+              <th class="py-2 px-4 border border-gray-300 text-left">Order</th>
+              <th class="py-2 px-4 border border-gray-300 text-left">Date</th>
+              <th class="py-2 px-4 border border-gray-300 text-left">Total</th>
+              <th class="py-2 px-4 border border-gray-300 text-left">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            @for(order of orders(); track order.id){
+              <tr class="hover:bg-gray-100">
+                <td class="py-2 px-4 border border-gray-300">{{ order.id }}</td>
+                <td class="py-2 px-4 border border-gray-300">{{order.orderCreated | date: 'medium'}}</td>
+                <td class="py-2 px-4 border border-gray-300">{{order.total | currency}}</td>
+                <td class="py-2 px-4 border border-gray-300 text-green-500">{{order.orderStatus}}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  } @else {
+    <div class="mx-auto mt-32 flex flex-col items-center justify-center">
+      <p class="text-lg font-semibold mb-3">You have no orders</p>
+      <button routerLink="" mat-stroked-button class="px-4 py-2 border rounded-md">Go Shopping</button>
+    </div>
+
+  }
+</section>

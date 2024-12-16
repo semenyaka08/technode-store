@@ -21,4 +21,9 @@ public class Order
     public decimal Subtotal { get; set; }
     
     public required string PaymentIntendId { get; set; }
+
+    public decimal GetTotal()
+    {
+        return Subtotal + DeliveryMethod.Price;
+    }
 }

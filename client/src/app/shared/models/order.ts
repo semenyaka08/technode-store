@@ -1,13 +1,14 @@
 export interface Order {
   id: number
   orderCreated: string
-  orderStatus: number
+  orderStatus: string
   buyerEmail: string
   paymentSummary: PaymentSummary
   orderItems: OrderItem[]
   shippingAddress: ShippingAddress
   deliveryMethodId: number
-  subtotal: number
+  subtotal: number,
+  total: number,
   paymentIntendId: string
 }
 

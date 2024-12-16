@@ -95,6 +95,8 @@ public class OrdersService(ICartService cartService, ILogger<OrdersService> logg
     {
         var orders = await orderRepository.GetOrdersAsync(userEmail);
 
+        Console.WriteLine(orders.FirstOrDefault().OrderStatus);
+        
         return orders.Select(z=>z.ToDto());
     }
 }

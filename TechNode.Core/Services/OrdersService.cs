@@ -100,7 +100,7 @@ public class OrdersService(ICartService cartService, ILogger<OrdersService> logg
         return orders.Select(z=>z.ToDto());
     }
 
-    public async Task UpdateOrderStatus(PaymentIntent intent)
+    public async Task<OrderDto> UpdateOrderStatus(PaymentIntent intent)
     {
         var order = await orderRepository.GetByPaymentIntentIdAsync(intent.Id);
 
@@ -112,5 +112,7 @@ public class OrdersService(ICartService cartService, ILogger<OrdersService> logg
             : OrderStatus.PaymentReceived;
 
         await orderRepository.SaveChangesAsync();
+
+        return order.ToDto();
     }
 }

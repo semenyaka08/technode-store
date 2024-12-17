@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Stripe;
+using TechNode.Api.Extensions;
+using TechNode.Api.SignalR;
 using TechNode.Core.Repositories.Interfaces;
 using TechNode.Core.Services.Interfaces;
 
@@ -8,7 +11,7 @@ namespace TechNode.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class PaymentController(IPaymentService paymentService, IDeliveryMethodRepository deliveryRepository, ILogger<PaymentController> logger, IOrdersService ordersService, IConfiguration configuration) : ControllerBase
+public class PaymentController(IPaymentService paymentService, IDeliveryMethodRepository deliveryRepository, ILogger<PaymentController> logger, IOrdersService ordersService, IConfiguration configuration, IHubContext<NotificationHub> hubContext) : ControllerBase
 {
     private readonly string _whSecret = configuration["StripeSettings:WhSecret"]!;
     
@@ -66,9 +69,15 @@ public class PaymentController(IPaymentService paymentService, IDeliveryMethodRe
     {
         if (intent.Status == "succeeded")
         {
-            await ordersService.UpdateOrderStatus(intent);
+            var order = await ordersService.UpdateOrderStatus(intent);
             
-            //TODO: SignalR
+            var connectionId = NotificationHub.GetConnectionIdByEmail(order.BuyerEmail);
+
+            if (!string.IsNullOrEmpty(connectionId))
+            {
+                await hubContext.Clients.Client(connectionId)
+                    .SendAsync("Order complete notification", order);
+            }
         }
     }
 

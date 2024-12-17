@@ -15,5 +15,7 @@ public static class ServiceCollectionExtension
         {
             configuration.ReadFrom.Configuration(context.Configuration);
         });
+
+        builder.Services.AddSignalR();
     }
 }

@@ -11,5 +11,5 @@ public interface IOrdersService
 
     Task<IEnumerable<OrderDto>> GetOrdersAsync(string userEmail);
 
-    public Task UpdateOrderStatus(PaymentIntent intent);
+    public Task<OrderDto> UpdateOrderStatus(PaymentIntent intent);
 }

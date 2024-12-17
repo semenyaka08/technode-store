@@ -9,4 +9,8 @@ public interface IOrderRepository
     Task<Order?> GetByIdAsync(int id, string userEmail);
     
     Task<IEnumerable<Order>> GetOrdersAsync(string userEmail);
+
+    Task<Order?> GetByPaymentIntentIdAsync(string paymentId);
+
+    Task SaveChangesAsync();
 }

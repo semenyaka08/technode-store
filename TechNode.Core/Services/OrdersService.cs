@@ -1,10 +1,12 @@
 ﻿using Microsoft.Extensions.Logging;
+using Stripe;
 using TechNode.Core.DTOs.OrderDtos;
 using TechNode.Core.Entities.OrderAggregate;
 using TechNode.Core.Exceptions;
 using TechNode.Core.Mapper;
 using TechNode.Core.Repositories.Interfaces;
 using TechNode.Core.Services.Interfaces;
+using Order = TechNode.Core.Entities.OrderAggregate.Order;
 
 namespace TechNode.Core.Services;
 
@@ -94,9 +96,21 @@ public class OrdersService(ICartService cartService, ILogger<OrdersService> logg
     public async Task<IEnumerable<OrderDto>> GetOrdersAsync(string userEmail)
     {
         var orders = await orderRepository.GetOrdersAsync(userEmail);
-
-        Console.WriteLine(orders.FirstOrDefault().OrderStatus);
         
         return orders.Select(z=>z.ToDto());
+    }
+
+    public async Task UpdateOrderStatus(PaymentIntent intent)
+    {
+        var order = await orderRepository.GetByPaymentIntentIdAsync(intent.Id);
+
+        if (order == null)
+            throw new NotFoundException(nameof(order.GetType), intent.Id);
+
+        order.OrderStatus = order.GetTotal() * 100 != intent.Amount 
+            ? OrderStatus.PaymentMissMatch 
+            : OrderStatus.PaymentReceived;
+
+        await orderRepository.SaveChangesAsync();
     }
 }

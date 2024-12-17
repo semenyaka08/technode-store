@@ -28,4 +28,17 @@ public class OrderRepository(ApplicationDbContext context) : IOrderRepository
 
         return orders;
     }
+
+    public async Task<Order?> GetByPaymentIntentIdAsync(string paymentId)
+    {
+        var order = await context.Orders.Include(z => z.OrderItems).Include(z => z.DeliveryMethod)
+            .FirstOrDefaultAsync(z=>z.PaymentIntendId == paymentId);
+
+        return order;
+    }
+
+    public async Task SaveChangesAsync()
+    {
+        await context.SaveChangesAsync();
+    }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Stripe;
 using TechNode.Core.Repositories.Interfaces;
 using TechNode.Core.Services.Interfaces;
 
@@ -7,8 +8,10 @@ namespace TechNode.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class PaymentController(IPaymentService paymentService, IDeliveryMethodRepository deliveryRepository) : ControllerBase
+public class PaymentController(IPaymentService paymentService, IDeliveryMethodRepository deliveryRepository, ILogger<PaymentController> logger, IOrdersService ordersService, IConfiguration configuration) : ControllerBase
 {
+    private readonly string _whSecret = configuration["StripeSettings:WhSecret"]!;
+    
     [HttpGet("deliveryMethods")]
     public async Task<IActionResult> GetDeliveryMethods()
     {
@@ -27,5 +30,58 @@ public class PaymentController(IPaymentService paymentService, IDeliveryMethodRe
             return BadRequest("Something wrong with your cart");
 
         return Ok(cart);
+    }
+
+    [HttpPost("webhook")]
+    public async Task<IActionResult> StripeWebhook()
+    {
+        var json = await new StreamReader(Request.Body).ReadToEndAsync();
+
+        try
+        {
+            var stripeEvent = ConstructStripeEvent(json);
+
+            if (stripeEvent.Data.Object is not PaymentIntent intent)
+            {
+                return BadRequest("Invalid event data");
+            }
+
+            await HandlePaymentIntentSucceeded(intent);
+
+            return Ok();
+        }
+        catch (StripeException ex)
+        {
+            logger.LogError(ex, "Stripe webhook error");
+            return StatusCode(StatusCodes.Status500InternalServerError, "Stripe webhook error");
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Unexpected error occured");
+            return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occured");
+        }
+    }
+
+    private async Task HandlePaymentIntentSucceeded(PaymentIntent intent)
+    {
+        if (intent.Status == "succeeded")
+        {
+            await ordersService.UpdateOrderStatus(intent);
+            
+            //TODO: SignalR
+        }
+    }
+
+    private Event ConstructStripeEvent(string json)
+    {
+        try
+        {
+            return EventUtility.ConstructEvent(json, Request.Headers["Stripe-Signature"], _whSecret);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Failed to construct stripe event");
+            throw new StripeException("Invalid signature");
+        }
     }
 }

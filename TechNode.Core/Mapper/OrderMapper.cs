@@ -19,7 +19,8 @@ public static class OrderMapper
             DeliveryMethodId = order.DeliveryMethod.Id,
             Subtotal = order.Subtotal,
             Total = order.GetTotal(),
-            PaymentIntendId = order.PaymentIntendId
+            PaymentIntendId = order.PaymentIntendId,
+            ShippingPrice = order.DeliveryMethod.Price
         };
     }
 

@@ -26,4 +26,6 @@ public class OrderDto
     public required string PaymentIntendId { get; set; }
 
     public required decimal Total { get; set; }
+
+    public required decimal ShippingPrice { get; set; }
 }

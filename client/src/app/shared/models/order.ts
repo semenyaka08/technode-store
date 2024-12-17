@@ -9,6 +9,7 @@ export interface Order {
   deliveryMethodId: number
   subtotal: number,
   total: number,
+  shippingPrice: number,
   paymentIntendId: string
 }
 

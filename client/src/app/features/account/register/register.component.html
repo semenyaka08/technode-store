@@ -1,34 +1,39 @@
-<form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="py-10 px-8">
-  <div class="text-center mb-8 text-purple-600">
-    <h2 class="text-2xl font-semibold">Register</h2>
-  </div>
-  <mat-form-field appearance="outline" class="w-full mb-6">
-    <mat-label>FirstName</mat-label>
-    <input formControlName="firstName" type="text" matInput />
-  </mat-form-field>
-  <mat-form-field appearance="outline" class="w-full mb-6">
-    <mat-label>Last Name</mat-label>
-    <input formControlName="lastName" type="text" matInput>
-  </mat-form-field>
-  <mat-form-field appearance="outline" class="w-full mb-6">
-    <mat-label>Email</mat-label>
-    <input formControlName="email" type="email" matInput>
-  </mat-form-field>
-  <mat-form-field appearance="outline" class="w-full mb-4">
-    <mat-label>Password</mat-label>
-    <input formControlName="password" type="password" matInput>
-  </mat-form-field>
-  @if(validationErrors){
-    <div class="text-red-600">
-      <ul>
-        @for (error of validationErrors; track $index){
-          <li>{{error}}</li>
-        }
-      </ul>
+<mat-card class="max-w-lg mx-auto bg-white">
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="py-10 px-8 bg-white">
+    <div class="text-center mb-8 text-purple-600">
+      <h2 class="text-2xl font-bold">Register</h2>
     </div>
-  }
+    <mat-form-field appearance="outline" class="w-full mb-6">
+      <mat-label>FirstName</mat-label>
+      <input formControlName="firstName" type="text" matInput />
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="w-full mb-6">
+      <mat-label>Last Name</mat-label>
+      <input formControlName="lastName" type="text" matInput>
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="w-full mb-6">
+      <mat-label>Email</mat-label>
+      <input formControlName="email" type="email" matInput>
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="w-full mb-4">
+      <mat-label>Password</mat-label>
+      <input formControlName="password" type="password" matInput>
+    </mat-form-field>
+    @if(validationErrors){
+      <div class="text-red-600">
+        <ul>
+          @for (error of validationErrors; track $index){
+            <li>{{error}}</li>
+          }
+        </ul>
+      </div>
+    }
 
-  <button [disabled]="registerForm.invalid" mat-flat-button type="submit" class="w-full py-2 mt-4">
-    Sign up
-  </button>
-</form>
+    <button [disabled]="registerForm.invalid" mat-flat-button type="submit" class="w-full py-2 mt-4">
+      Sign up
+    </button>
+  </form>
+</mat-card>
+
+
+

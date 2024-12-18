@@ -1,5 +1,6 @@
 using TechNode.Api.Extensions;
 using TechNode.Api.Middlewares;
+using TechNode.Api.SignalR;
 using TechNode.Core.Entities;
 using TechNode.Core.Extensions;
 using TechNode.Infrastructure;
@@ -41,7 +42,11 @@ app.UseCors(z => z
     .AllowCredentials()
     .WithOrigins("http://localhost:4200", "https://localhost:4200"));
 
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapControllers();
 app.MapGroup("api").MapIdentityApi<AppUser>();
+app.MapHub<NotificationHub>("hub/notifications");
 
 app.Run();

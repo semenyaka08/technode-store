@@ -23,6 +23,8 @@ import {LoginComponent} from '../account/login/login.component';
 import {AccountService} from '../../core/services/account.service';
 import {MatDialog} from '@angular/material/dialog';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
+import {OrderToCreate, ShippingAddress} from '../../shared/models/order';
+import {OrderService} from '../../core/services/order.service';
 
 @Component({
   selector: 'app-checkout',
@@ -48,6 +50,7 @@ export class CheckoutComponent implements OnInit, OnDestroy{
   private stripeService = inject(StripeService);
   private snackbar = inject(SnackbarService);
   private cartService = inject(CartService);
+  private orderService = inject(OrderService);
   private router = inject(Router);
   private accountService = inject(AccountService);
   private dialog = inject(MatDialog);
@@ -97,13 +100,20 @@ export class CheckoutComponent implements OnInit, OnDestroy{
       if(this.accountService.currentUser()){
         if (this.confirmationToken) {
           const result = await this.stripeService.confirmPayment(this.confirmationToken);
-          if (result.error) {
+          if(result.paymentIntent?.status == 'succeeded'){
+            const orderModel = await this.createOrderModel();
+            const orderResult = await firstValueFrom(this.orderService.createOrder(orderModel));
+            if(orderResult){
+              this.orderService.orderComplete = true;
+              this.cartService.deleteCart();
+              this.cartService.deliveryMethod.set(undefined);
+              await this.router.navigateByUrl('/checkout/success');
+            }else
+              throw new Error('Error with creating order');
+          }else if(result.error)
             throw new Error(result.error.message);
-          } else {
-            this.cartService.deleteCart();
-            this.cartService.deliveryMethod.set(undefined);
-            await this.router.navigateByUrl('/checkout/success');
-          }
+          else
+            throw new Error('Something went wrong');
         }
       }else{
         const dialogRef = this.dialog.open(LoginComponent, {
@@ -121,6 +131,47 @@ export class CheckoutComponent implements OnInit, OnDestroy{
       stepper.previous();
     }finally {
       this.loading = false;
+    }
+  }
+
+  private async createOrderModel(){
+    const cartId = this.cartService.cart()?.id;
+    const deliveryMethodId = this.cartService.cart()?.deliveryMethodId;
+    const shippingAddress = await this.getAddressFromStripeAddress();
+    const card = this.confirmationToken?.payment_method_preview.card;
+    if(!cartId || !deliveryMethodId || !shippingAddress || !card)
+      throw new Error("problems with loading order model");
+
+    const orderModel: OrderToCreate = {
+      cartId: cartId,
+      deliveryMethodId: +deliveryMethodId,
+      shippingAddress: shippingAddress,
+      paymentSummary: {
+        last4: +card.last4,
+        brand: card.brand,
+        expMonth: card.exp_month,
+        year: card.exp_year
+      }
+    }
+    return orderModel;
+  }
+
+  private async getAddressFromStripeAddress() : Promise<ShippingAddress | null>{
+    const result = await this.addressElement?.getValue();
+    const address = result?.value.address;
+
+    if(address) {
+      return {
+        city: address.city,
+        country: address.country,
+        line1: address.line1,
+        line2: address.line2,
+        name: result.value.name,
+        postalCode: address.postal_code,
+        state: address.state
+      }
+    }else {
+      return null;
     }
   }
 

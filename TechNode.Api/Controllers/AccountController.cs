@@ -53,8 +53,6 @@ public class AccountController(SignInManager<AppUser> signInManager) : Controlle
     {
         var request = Request;
         
-        Console.WriteLine(request);
-        
         var user = await signInManager.UserManager.GetUserByEmailWithAddressAsync(User);
 
         if (user == null) return Unauthorized();

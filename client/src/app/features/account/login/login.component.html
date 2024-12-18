@@ -1,16 +1,20 @@
-<form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="py-10 px-8">
-  <div class="text-center mb-12 text-purple-600">
-    <h2 class="text-2xl font-semibold">Login</h2>
-  </div>
-  <mat-form-field appearance="outline" class="w-full mb-8">
-    <mat-label>Email</mat-label>
-    <input formControlName="email" type="email" matInput>
-  </mat-form-field>
-  <mat-form-field appearance="outline" class="w-full mb-12">
-    <mat-label>Password</mat-label>
-    <input formControlName="password" type="password" matInput>
-  </mat-form-field>
-  <button mat-flat-button type="submit" class="w-full py-2">
-    Sign in
-  </button>
-</form>
+<mat-card class="max-w-lg mx-auto mt-12 bg-white shadow-2xl">
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="py-10 px-8 bg-white">
+    <div class="text-center mb-12 text-purple-600">
+      <h2 class="text-2xl font-bold">Login</h2>
+    </div>
+    <mat-form-field appearance="outline" class="w-full mb-8">
+      <mat-label>Email</mat-label>
+      <input formControlName="email" type="email" matInput>
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="w-full mb-12">
+      <mat-label>Password</mat-label>
+      <input formControlName="password" type="password" matInput>
+    </mat-form-field>
+    <button mat-flat-button type="submit" class="w-full py-2">
+      Sign in
+    </button>
+  </form>
+</mat-card>
+
+

@@ -10,7 +10,6 @@ import {FormsModule} from '@angular/forms';
 import {MatBadge} from '@angular/material/badge';
 import {CartService} from '../../core/services/cart.service';
 import {MatDialog} from '@angular/material/dialog';
-import {LoginComponent} from '../../features/account/login/login.component';
 import {RegisterComponent} from '../../features/account/register/register.component';
 import {AccountService} from '../../core/services/account.service';
 import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
@@ -47,12 +46,6 @@ export class HeaderComponent {
   private dialogService = inject(MatDialog);
 
   searchPhrase = signal<string | undefined>(undefined);
-
-  openLoginDialog(){
-    this.dialogService.open(LoginComponent, {
-      maxWidth: '400px'
-    });
-  }
 
   openRegisterDialog(){
     this.dialogService.open(RegisterComponent, {

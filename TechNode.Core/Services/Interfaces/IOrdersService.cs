@@ -1,4 +1,5 @@
-﻿using TechNode.Core.DTOs.OrderDtos;
+﻿using Stripe;
+using TechNode.Core.DTOs.OrderDtos;
 
 namespace TechNode.Core.Services.Interfaces;
 
@@ -9,4 +10,6 @@ public interface IOrdersService
     Task<OrderDto> GetOrderByIdAsync(int orderId, string userEmail);
 
     Task<IEnumerable<OrderDto>> GetOrdersAsync(string userEmail);
+
+    public Task<OrderDto> UpdateOrderStatus(PaymentIntent intent);
 }

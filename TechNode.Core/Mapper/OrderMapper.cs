@@ -11,14 +11,16 @@ public static class OrderMapper
         {
             Id = order.Id,
             OrderCreated = order.OrderCreated,
-            OrderStatus = order.OrderStatus,
+            OrderStatus = order.OrderStatus.ToString(),
             BuyerEmail = order.BuyerEmail,
             PaymentSummary = order.PaymentSummary,
             OrderItems = order.OrderItems.Select(z=>z.ToDto()).ToList(),
             ShippingAddress = order.ShippingAddress,
             DeliveryMethodId = order.DeliveryMethod.Id,
             Subtotal = order.Subtotal,
-            PaymentIntendId = order.PaymentIntendId
+            Total = order.GetTotal(),
+            PaymentIntendId = order.PaymentIntendId,
+            ShippingPrice = order.DeliveryMethod.Price
         };
     }
 

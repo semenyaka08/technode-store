@@ -20,7 +20,7 @@
       <p class="text-base font-semibold">{{cartService.totals()?.total | currency}}</p>
     </div>
     @if(location.path() == "/cart"){
-      <button mat-button class="!text-sm !font-medium !text-white !bg-purple-600" (click)="onCheckout()">
+      <button mat-button class="!text-sm !font-medium !text-white !bg-purple-600" routerLink="/checkout">
         Checkout
       </button>
       <button mat-button class="!text-sm !font-medium">

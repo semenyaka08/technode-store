@@ -72,9 +72,9 @@ public class DataSeeder(ApplicationDbContext context) : IDataSeeder
     {
         return new List<Category>
         {
-            new() { Name = "Videocards" },
-            new() { Name = "Processors" },
-            new() { Name = "Motherboards" }
+            new() { Name = "Videocards", IsMainCategory = false},
+            new() { Name = "Processors", IsMainCategory = false },
+            new() { Name = "Motherboards", IsMainCategory = false }
         };
     }
 

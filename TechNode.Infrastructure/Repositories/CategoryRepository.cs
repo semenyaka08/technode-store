@@ -6,9 +6,21 @@ namespace TechNode.Infrastructure.Repositories;
 
 public class CategoryRepository(ApplicationDbContext context) : ICategoryRepository
 {
-    public async Task<IEnumerable<Category>> GetAllCategoriesAsync()
+    public async Task<IEnumerable<Category>> GetAllCategoriesAsync(bool? isMainCategory, int? parentCategoryId)
     {
-        return await context.Categories.Include(z=>z.Specifications).ThenInclude(z=>z.ProductSpecifications).ToListAsync();
+        var query = context.Categories.AsQueryable();
+
+        if (isMainCategory is true)
+        {
+            query = query.Where(z=>z.IsMainCategory).Include(z=>z.ChildCategories);
+        }
+
+        if (parentCategoryId != null)
+        {
+            query = query.Where(z => z.ParentCategoryId == parentCategoryId);
+        }
+        
+        return await query.Include(z=>z.Specifications).ThenInclude(z=>z.ProductSpecifications).ToListAsync();
     }
 
     public async Task<Category?> GetCategoryByIdAsync(int id)

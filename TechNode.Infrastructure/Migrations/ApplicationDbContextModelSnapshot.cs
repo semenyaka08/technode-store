@@ -290,13 +290,24 @@ namespace TechNode.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<bool>("IsMainCategory")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("ParentCategoryId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.HasIndex("ParentCategoryId");
+
+                    b.ToTable("Categories", t =>
+                        {
+                            t.HasCheckConstraint("CK_Category_MainCategory", "([IsMainCategory] = 1 AND [ParentCategoryId] IS NULL) OR ([IsMainCategory] = 0)");
+                        });
                 });
 
             modelBuilder.Entity("TechNode.Core.Entities.DeliveryMethod", b =>
@@ -544,6 +555,16 @@ namespace TechNode.Infrastructure.Migrations
                     b.Navigation("Address");
                 });
 
+            modelBuilder.Entity("TechNode.Core.Entities.Category", b =>
+                {
+                    b.HasOne("TechNode.Core.Entities.Category", "ParentCategory")
+                        .WithMany("ChildCategories")
+                        .HasForeignKey("ParentCategoryId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("ParentCategory");
+                });
+
             modelBuilder.Entity("TechNode.Core.Entities.OrderAggregate.Order", b =>
                 {
                     b.HasOne("TechNode.Core.Entities.DeliveryMethod", "DeliveryMethod")
@@ -693,6 +714,8 @@ namespace TechNode.Infrastructure.Migrations
 
             modelBuilder.Entity("TechNode.Core.Entities.Category", b =>
                 {
+                    b.Navigation("ChildCategories");
+
                     b.Navigation("Products");
                 });
 

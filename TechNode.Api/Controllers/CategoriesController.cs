@@ -18,9 +18,9 @@ public class CategoriesController(ICategoryService categoryService) : Controller
     }    
     
     [HttpGet]
-    public async Task<IActionResult> GetCategories()
+    public async Task<IActionResult> GetCategories([FromQuery] bool? isMainCategory, [FromQuery] int? parentCategoryId)
     {
-        var categories = await categoryService.GetAllCategoriesAsync();
+        var categories = await categoryService.GetAllCategoriesAsync(isMainCategory, parentCategoryId);
         
         return Ok(categories);
     }
@@ -41,7 +41,7 @@ public class CategoriesController(ICategoryService categoryService) : Controller
         return NoContent();
     }
     
-    [HttpDelete]
+    [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteCategory([FromRoute] int id)
     {
         await categoryService.DeleteCategoryAsync(id);

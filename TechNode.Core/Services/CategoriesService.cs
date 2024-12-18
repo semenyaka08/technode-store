@@ -29,11 +29,11 @@ public class CategoriesService(ICategoryRepository categoryRepository, ILogger<C
         };
     }
 
-    public async Task<IEnumerable<CategoryGetResponse>> GetAllCategoriesAsync()
+    public async Task<IEnumerable<CategoryGetResponse>> GetAllCategoriesAsync(bool? isMainCategory, int? parentCategoryId)
     {
         logger.LogInformation("Getting all categories");
 
-        var categories = await categoryRepository.GetAllCategoriesAsync();
+        var categories = await categoryRepository.GetAllCategoriesAsync(isMainCategory, parentCategoryId);
         
         return categories.Select(z=> new CategoryGetResponse
         {
@@ -46,17 +46,37 @@ public class CategoriesService(ICategoryRepository categoryRepository, ILogger<C
                 Values = specification.ProductSpecifications
                     .Select(ps => ps.Value)
                     .Distinct()
-            })
+            }),
+            ChildrenCategories = z.ChildCategories.Select(child => new CategoryGetResponse
+            {
+                Id = child.Id,
+                Name = child.Name,
+                Specifications = child.Specifications.Select(specification => new SpecificationGetResponse
+                {
+                    Id = specification.Id,
+                    Name = specification.Name,
+                    Values = specification.ProductSpecifications
+                        .Select(ps => ps.Value)
+                        .Distinct()
+                }).ToList()
+            }).ToList()
         });
     }
 
-    public Task<int> AddCategoryAsync(CategoryAddRequest addRequest)
+    public async Task<int> AddCategoryAsync(CategoryAddRequest addRequest)
     {
         logger.LogInformation("Adding new category");
         
-        var category = new Category{Name = addRequest.Name};
+        var category = new Category{Name = addRequest.Name, IsMainCategory = addRequest.IsMainCategory};
         
-        return categoryRepository.AddCategoryAsync(category);
+        if (addRequest.ParentCategoryId.HasValue)
+        {
+            var parentCategory = await categoryRepository.GetCategoryByIdAsync(addRequest.ParentCategoryId.Value);
+
+            category.ParentCategory = parentCategory;
+        }
+        
+        return await categoryRepository.AddCategoryAsync(category);
     }
 
     public async Task UpdateCategoryAsync(int categoryId, CategoryUpdateRequest updateRequest)
@@ -69,6 +89,13 @@ public class CategoriesService(ICategoryRepository categoryRepository, ILogger<C
             throw new NotFoundException(nameof(Category), categoryId.ToString());
         
         category.Name = updateRequest.Name;
+
+        if (updateRequest.ParentCategoryId.HasValue)
+        {
+            var parentCategory = await categoryRepository.GetCategoryByIdAsync(updateRequest.ParentCategoryId.Value);
+
+            category.ParentCategory = parentCategory;
+        }
 
         await categoryRepository.SaveChangesAsync();
     }
@@ -83,5 +110,7 @@ public class CategoriesService(ICategoryRepository categoryRepository, ILogger<C
             throw new NotFoundException(nameof(Category), categoryId.ToString());
         
         categoryRepository.DeleteCategoryAsync(category);
+
+        await categoryRepository.SaveChangesAsync();
     }
 }

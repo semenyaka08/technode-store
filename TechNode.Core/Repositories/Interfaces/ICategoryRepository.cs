@@ -4,7 +4,7 @@ namespace TechNode.Core.Repositories.Interfaces;
 
 public interface ICategoryRepository
 {
-    Task<IEnumerable<Category>> GetAllCategoriesAsync();
+    Task<IEnumerable<Category>> GetAllCategoriesAsync(bool? isMainCategory, int? parentCategoryId);
     
     Task<Category?> GetCategoryByIdAsync(int id);
     

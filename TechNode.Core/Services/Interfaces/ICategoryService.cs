@@ -6,7 +6,7 @@ public interface ICategoryService
 {
     Task<CategoryGetResponse> GetCategoryByIdAsync(int categoryId);
     
-    Task<IEnumerable<CategoryGetResponse>> GetAllCategoriesAsync();
+    Task<IEnumerable<CategoryGetResponse>> GetAllCategoriesAsync(bool? isMainCategory, int? parentCategoryId);
 
     Task<int> AddCategoryAsync(CategoryAddRequest addRequest);
 

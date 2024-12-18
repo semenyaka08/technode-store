@@ -8,4 +8,6 @@ public class CategoryGetResponse
     public required string Name { get; set; }
 
     public IEnumerable<SpecificationGetResponse> Specifications { get; set; } = [];
+
+    public IEnumerable<CategoryGetResponse> ChildrenCategories { get; set; } = [];
 }

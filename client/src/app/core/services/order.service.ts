@@ -9,6 +9,7 @@ import {Order, OrderToCreate} from '../../shared/models/order';
 export class OrderService {
   httpClient = inject(HttpClient);
   baseUrl = environment.apiUrl;
+  orderComplete = false;
 
   getOrderById(id: number){
    return this.httpClient.get<Order>(this.baseUrl + `orders/${id}`, {withCredentials: true});

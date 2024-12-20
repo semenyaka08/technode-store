@@ -1,7 +1,30 @@
-<div class="w-full bg-gray-100 p-5 shadow-md rounded-lg border-solid width-border border-purple-600">
-  <mat-nav-list>
-    @for (category of categories; track $index) {
-      <app-category-item [category]="category"></app-category-item>
-    }
-  </mat-nav-list>
+<div class="w-full flex" (mouseenter)="onDisplayCategories()" (mouseleave)="onDisplayCategories()">
+  <div class="w-2/12 flex justify-between gap-3 py-5 px-2.5">
+    <ul class="flex-1">
+      @for (category of mainCategories; track category.id) {
+        <li
+          class="text-lg font-medium flex justify-between items-center px-3 py-2 rounded-lg transition duration-300 hover:bg-purple-400 hover:text-white"
+          (mouseover)="activeCategory = category"
+        >
+          <span>{{ category.name }}</span>
+          <mat-icon class="text-lg">chevron_right</mat-icon>
+        </li>
+      }
+    </ul>
+    <div class="w-1 bg-gray-200"></div>
+  </div>
+
+  <div class="w-10/12 p-4 rounded-lg" *ngIf="displayCategories">
+    <h2 class="text-xl font-semibold mb-4">{{ activeCategory!.name }}</h2>
+    <ul>
+      <li
+        *ngFor="let subcategory of activeCategory!.childrenCategories"
+        class="text-base px-3 py-2 hover:text-purple-600 transition duration-300 cursor-pointer"
+      >
+        <a routerLink="category/{{subcategory.name.toLowerCase()}}">
+          {{ subcategory.name }}
+        </a>
+      </li>
+    </ul>
+  </div>
 </div>

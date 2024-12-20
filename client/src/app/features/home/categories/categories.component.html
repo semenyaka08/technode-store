@@ -1,7 +1,5 @@
-<div class="w-full flex relative" (mouseenter)="onDisplayCategories()"
-     (mouseleave)="onDisplayCategories()">
-  <div
-    class="w-full flex">
+<div class="w-full flex relative rounded-l-lg bg-white" (mouseenter)="onDisplayCategories()" (mouseleave)="onDisplayCategories()">
+  <div class="w-full flex">
     <div class="w-full flex justify-between gap-3 py-5 px-2.5">
       <ul class="flex-1">
         @for (category of mainCategories; track category.id) {
@@ -20,7 +18,7 @@
 
   <!-- Subcategories block -->
   <div
-    class="absolute top-0 left-full w-3/4 p-4 rounded-lg bg-white shadow-lg z-20"
+    class="subcategories-block h-full p-4 rounded-r-lg bg-white"
     *ngIf="displayCategories"
   >
     <h2 class="text-xl font-semibold mb-4">

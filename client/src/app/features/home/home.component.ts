@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 import {MatCard, MatCardContent, MatCardHeader} from '@angular/material/card';
 import {MatCardTitle} from '@angular/material/card';
 import {CategoriesComponent} from './categories/categories.component';
@@ -16,5 +16,5 @@ import {CategoriesComponent} from './categories/categories.component';
   styleUrl: './home.component.scss'
 })
 export class HomeComponent {
-
+  @Output() toggleOverlay = new EventEmitter<boolean>();
 }

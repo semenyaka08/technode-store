@@ -1,18 +1,8 @@
-:host {
-  position: relative;
-}
-
-app-categories {
-  position: relative;
-  z-index: 10;
-}
-
 .subcategories-block {
+  width: calc(100vw);
   position: absolute;
   top: 0;
   left: 100%;
-  width: 75%;
   background: white;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  z-index: 20;
 }
+

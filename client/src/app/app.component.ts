@@ -1,7 +1,8 @@
-import {Component} from '@angular/core';
+import {Component, inject, signal} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import {HeaderComponent} from './layouts/header/header.component';
 import {HomeComponent} from './features/home/home.component';
+import {OverlayService} from './core/services/overlay.service';
 
 @Component({
   selector: 'app-root',
@@ -12,4 +13,5 @@ import {HomeComponent} from './features/home/home.component';
 })
 export class AppComponent {
   title = 'TechNode.Ua';
+  overlayService = inject(OverlayService);
 }

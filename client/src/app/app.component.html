@@ -1,4 +1,9 @@
 <app-header/>
 <div class="container mt-6 pr-6 pl-6">
-  <router-outlet/>
+  <router-outlet />
 </div>
+@if(overlayService.displayOverlay()){
+  <div class="overlay"></div>
+}
+
+

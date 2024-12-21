@@ -3,15 +3,17 @@ import {HttpClient} from '@angular/common/http';
 import {Product} from '../../shared/models/product';
 import {PageResult} from '../../shared/models/page-result';
 import {ShopParameters} from '../../shared/models/shopParameters';
+import {environment} from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductsService {
   httpClient = inject(HttpClient);
+  baseUrl = environment.apiUrl;
 
   getProducts(shopParameters: ShopParameters) {
-    let url = `http://localhost:5104/api/products${shopParameters.categoryName ? `/${shopParameters.categoryName}` : ''}`;
+    let url = `${this.baseUrl}products${shopParameters.categoryName ? `/${shopParameters.categoryName}` : ''}`;
     const params = new URLSearchParams();
 
     if(shopParameters.filters){
@@ -45,7 +47,7 @@ export class ProductsService {
   }
 
   getProductById(productId: string){
-    let url = `http://localhost:5104/api/products/${productId}`;
+    let url = `${this.baseUrl}products/${productId}`;
 
     return this.httpClient.get<Product>(url);
   }

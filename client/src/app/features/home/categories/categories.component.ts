@@ -1,6 +1,5 @@
-import {Component, inject, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {MatListItem, MatNavList} from '@angular/material/list';
-import {CategoryItemComponent} from './category-item/category-item.component';
 import {CategoriesService} from '../../../core/services/categories.service';
 import {Category} from '../../../shared/models/category';
 import {NgForOf, NgIf} from '@angular/common';
@@ -13,7 +12,6 @@ import {OverlayService} from '../../../core/services/overlay.service';
   imports: [
     MatNavList,
     MatListItem,
-    CategoryItemComponent,
     NgForOf,
     NgIf,
     MatIcon,

@@ -1,12 +1,14 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Category} from '../../shared/models/category';
+import {environment} from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CategoriesService{
   httpClient: HttpClient = inject(HttpClient);
+  baseUrl = environment.apiUrl;
 
   getCategories(params?: { [key: string]: string | number | boolean }){
     let queryParams = new HttpParams();
@@ -19,6 +21,6 @@ export class CategoriesService{
       }
     }
 
-    return this.httpClient.get<Category[]>('http://localhost:5104/api/categories', { params: queryParams });
+    return this.httpClient.get<Category[]>(`${this.baseUrl}categories`, { params: queryParams });
   }
 }

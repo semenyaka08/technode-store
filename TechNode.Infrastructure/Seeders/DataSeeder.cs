@@ -35,6 +35,7 @@ public class DataSeeder(ApplicationDbContext context) : IDataSeeder
                 await context.SaveChangesAsync();
             }
             
+            
             var videocardsCategory = await context.Categories.Include(category => category.Specifications).FirstOrDefaultAsync(c => c.Name == "Videocards");
             if (videocardsCategory != null && !videocardsCategory.Specifications.Any())
             {
@@ -52,6 +53,42 @@ public class DataSeeder(ApplicationDbContext context) : IDataSeeder
                 videocardsCategory.Specifications = specifications;
                 await context.SaveChangesAsync();
             }
+            
+            var processorsCategory = await context.Categories.Include(c => c.Specifications)
+                .FirstOrDefaultAsync(c => c.Name == "Processors");
+            if (processorsCategory != null && !processorsCategory.Specifications.Any())
+            {
+                var processorSpecifications = await context.Specifications
+                    .Where(s => new[]
+                    {
+                        "Core count",
+                        "Thread count",
+                        "Base clock speed",
+                        "TDP"
+                    }.Contains(s.Name))
+                    .ToListAsync();
+
+                processorsCategory.Specifications = processorSpecifications;
+                await context.SaveChangesAsync();
+            }
+            
+            var motherboardsCategory = await context.Categories.Include(c => c.Specifications)
+                .FirstOrDefaultAsync(c => c.Name == "Motherboards");
+            if (motherboardsCategory != null && !motherboardsCategory.Specifications.Any())
+            {
+                var motherboardSpecifications = await context.Specifications
+                    .Where(s => new[]
+                    {
+                        "Socket type",
+                        "Chipset",
+                        "Form factor",
+                        "RAM slots"
+                    }.Contains(s.Name))
+                    .ToListAsync();
+
+                motherboardsCategory.Specifications = motherboardSpecifications;
+                await context.SaveChangesAsync();
+            }
         }
 
     }
@@ -64,17 +101,42 @@ public class DataSeeder(ApplicationDbContext context) : IDataSeeder
             new() { Name = "Memory capacity" },
             new() { Name = "Funs number" },
             new() { Name = "Memory bus width" },
-            new() { Name = "Memory type" }
+            new() { Name = "Memory type" },
+            
+            new() { Name = "Core count" },
+            new() { Name = "Thread count" },
+            new() { Name = "Base clock speed" },
+            new() { Name = "TDP" },
+            
+            new() { Name = "Socket type" },
+            new() { Name = "Chipset" },
+            new() { Name = "Form factor" },
+            new() { Name = "RAM slots" }
         };
     }
 
     private IEnumerable<Category> GetCategories()
     {
+        //MainCategories
+        var components = new Category { Name = "Components", IsMainCategory = true };
+        var laptops = new Category { Name = "Laptops", IsMainCategory = true };
+        var monitors = new Category { Name = "Monitors", IsMainCategory = true };
+        var gamingPeripherals = new Category { Name = "Gaming Peripherals", IsMainCategory = true };
+
+        // SubCategories
+        var videocards = new Category { Name = "Videocards", IsMainCategory = false, ParentCategory = components };
+        var processors = new Category { Name = "Processors", IsMainCategory = false, ParentCategory = components };
+        var motherboards = new Category { Name = "Motherboards", IsMainCategory = false, ParentCategory = components };
+
         return new List<Category>
         {
-            new() { Name = "Videocards", IsMainCategory = false},
-            new() { Name = "Processors", IsMainCategory = false },
-            new() { Name = "Motherboards", IsMainCategory = false }
+            components,
+            laptops,
+            monitors,
+            gamingPeripherals,
+            videocards,
+            processors,
+            motherboards
         };
     }
 

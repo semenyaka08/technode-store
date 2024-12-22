@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using TechNode.Core.DTOs.ProductsDtos;
@@ -32,6 +33,7 @@ public class ProductsController(IProductsService productsService) : ControllerBa
         return Ok(product);
     }
     
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<IActionResult> CreateProduct([FromBody] ProductAddRequest product)
     {
@@ -40,6 +42,7 @@ public class ProductsController(IProductsService productsService) : ControllerBa
         return CreatedAtAction(nameof(GetProductById), new { id }, new { id });
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdateProduct([FromRoute] int id, [FromBody] ProductUpdateRequest updateRequest)
     {
@@ -48,6 +51,7 @@ public class ProductsController(IProductsService productsService) : ControllerBa
         return NoContent();
     }
     
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteProduct([FromRoute] int id)
     {

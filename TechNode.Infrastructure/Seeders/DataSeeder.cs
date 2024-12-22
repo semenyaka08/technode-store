@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using TechNode.Core.Entities;
 
 namespace TechNode.Infrastructure.Seeders;
 
-public class DataSeeder(ApplicationDbContext context) : IDataSeeder
+public class DataSeeder(ApplicationDbContext context, UserManager<AppUser> userManager, IConfiguration configuration, RoleManager<IdentityRole> roleManager) : IDataSeeder
 {
     public async Task SeedAsync()
     {
@@ -14,6 +16,23 @@ public class DataSeeder(ApplicationDbContext context) : IDataSeeder
         
         if (await context.Database.CanConnectAsync())
         {
+            string[] roles = ["Admin", "User"];
+            
+            foreach (var role in roles)
+            {
+                if (!await roleManager.RoleExistsAsync(role))
+                {
+                    await roleManager.CreateAsync(new IdentityRole(role));
+                }
+            }
+            
+            if (!userManager.Users.Any(z => z.Email == configuration["AdminData:Email"]))
+            {
+                var (adminUser, password) = GetAdminUser();
+                await userManager.CreateAsync(adminUser, password);
+                await userManager.AddToRoleAsync(adminUser, "Admin");
+            }
+            
             if (!context.Categories.Any())
             {
                 var categories = GetCategories();
@@ -149,5 +168,20 @@ public class DataSeeder(ApplicationDbContext context) : IDataSeeder
             new() { Name = "UPS3", Description = "Slower but cheap", DeliveryTime = "5-10 Days", Price = 10 },
             new() { Name = "Free", Description = "You get what you pay for", DeliveryTime = "1-2 weeks", Price = 0 }
         };
+    }
+
+    private (AppUser, string) GetAdminUser()
+    {
+        var adminUser = new AppUser
+        {
+            FirstName = configuration["AdminData:FirstName"],
+            LastName = configuration["AdminData:LastName"],
+            UserName = configuration["AdminData:Email"],
+            Email = configuration["AdminData:Email"],
+        };
+        
+        string password = configuration["AdminData:Password"]!;
+        
+        return (adminUser, password);
     }
 }

@@ -15,6 +15,7 @@ public class PaymentController(IPaymentService paymentService, IDeliveryMethodRe
 {
     private readonly string _whSecret = configuration["StripeSettings:WhSecret"]!;
     
+    [Authorize]
     [HttpGet("deliveryMethods")]
     public async Task<IActionResult> GetDeliveryMethods()
     {

@@ -19,7 +19,6 @@ export class AccountService {
     return this.httpClient.get<User>(this.apiUrl + 'account/user-info', { withCredentials: true }).pipe(
       map(data => {
         this.currentUser.set(data);
-        console.log(this.currentUser());
         return true;
       }),
       catchError(() => {

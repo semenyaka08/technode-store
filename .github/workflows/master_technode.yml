@@ -28,7 +28,7 @@ jobs:
         run: |
           cd client
           npm install
-          ng build
+          ng build --configuration=production
 
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v4

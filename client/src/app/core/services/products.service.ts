@@ -41,8 +41,6 @@ export class ProductsService {
 
     url += `?${params.toString()}`;
 
-    console.log(url);
-
     return this.httpClient.get<PageResult<Product>>(url);
   }
 

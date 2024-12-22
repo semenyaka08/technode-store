@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using Stripe;
+using TechNode.Core.Common;
 using TechNode.Core.DTOs.OrderDtos;
+using TechNode.Core.DTOs.OrderDtos.AdminOrdersSection;
 using TechNode.Core.Entities.OrderAggregate;
 using TechNode.Core.Exceptions;
 using TechNode.Core.Mapper;
@@ -12,6 +14,15 @@ namespace TechNode.Core.Services;
 
 public class OrdersService(ICartService cartService, ILogger<OrdersService> logger, IOrderRepository orderRepository, IProductsRepository productsRepository, IDeliveryMethodRepository deliveryMethodRepository) : IOrdersService
 {
+    public async Task<PageResult<OrderDto>> GetAllOrdersAsync(AdminOrdersGetRequest request)
+    {
+        var (orders, totalCount) = await orderRepository.GetAllOrdersAsync(request);
+        
+        var mappedOrders = orders.Select(z=>z.ToDto());
+
+        return new PageResult<OrderDto>(mappedOrders, totalCount, request.PageSize, request.PageNumber);
+    }
+    
     public async Task<int> AddOrderAsync(OrderCreateDto orderCreateDto, string userEmail)
     {
         logger.LogInformation("Starting the AddOrderAsync method for user: {UserEmail} and cart ID: {CartId}", userEmail, orderCreateDto.CartId);

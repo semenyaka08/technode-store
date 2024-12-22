@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TechNode.Core.DTOs.OrderDtos.AdminOrdersSection;
 using TechNode.Core.Entities.OrderAggregate;
 using TechNode.Core.Repositories.Interfaces;
 
@@ -40,5 +41,22 @@ public class OrderRepository(ApplicationDbContext context) : IOrderRepository
     public async Task SaveChangesAsync()
     {
         await context.SaveChangesAsync();
+    }
+
+    public async Task<(IEnumerable<Order>, int)> GetAllOrdersAsync(AdminOrdersGetRequest request)
+    {
+        var query = context.Orders.
+            Include(z=>z.OrderItems).
+            Include(z=>z.DeliveryMethod)
+            .AsQueryable();
+        
+        if(request.BuyerEmail != null)
+        {
+            query = query.Where(z=>z.BuyerEmail == request.BuyerEmail);
+        }
+        
+        int totalCount = query.Count();
+        
+        return (await query.Skip((request.PageNumber - 1) * request.PageSize).Take(request.PageSize).ToListAsync(), totalCount);
     }
 }

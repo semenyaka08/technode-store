@@ -14,8 +14,9 @@ namespace TechNode.Api.Controllers;
 public class PaymentController(IPaymentService paymentService, IDeliveryMethodRepository deliveryRepository, ILogger<PaymentController> logger, IOrdersService ordersService, IConfiguration configuration, IHubContext<NotificationHub> hubContext) : ControllerBase
 {
     private readonly string _whSecret = configuration["StripeSettings:WhSecret"]!;
+    private readonly string _publicKey = configuration["StripeSettings:PublishableKey"]!;
+    private readonly string _secretKey = configuration["StripeSettings:SecretKey"]!;
     
-    [Authorize]
     [HttpGet("deliveryMethods")]
     public async Task<IActionResult> GetDeliveryMethods()
     {
@@ -28,6 +29,10 @@ public class PaymentController(IPaymentService paymentService, IDeliveryMethodRe
     [HttpPost("{cartId}")]
     public async Task<IActionResult> CreateOrUpdatePaymentIntent([FromRoute] string cartId)
     {
+        logger.LogCritical($"Public key: {_publicKey}");
+        logger.LogCritical($"Secret key: {_secretKey}");
+        logger.LogCritical($"Wh Secret: {_whSecret}");
+        
         var cart = await paymentService.AddOrUpdatePaymentIntent(cartId);
 
         if (cart == null)

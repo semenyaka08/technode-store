@@ -17,7 +17,10 @@ public static class ServiceCollectionExtension
         
         services.AddDbContext<ApplicationDbContext>(options =>
         {
-            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")).EnableSensitiveDataLogging();
+            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"), sqlOptions =>
+            {
+                sqlOptions.EnableRetryOnFailure(maxRetryCount: 5, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
+            }).EnableSensitiveDataLogging();
         });
         
         services.AddScoped<IDataSeeder, DataSeeder>();
@@ -28,7 +31,7 @@ public static class ServiceCollectionExtension
         services.AddScoped<IPaymentService, PaymentService>();
         services.AddScoped<IOrderRepository, OrderRepository>();
         
-        services.AddSingleton<IConnectionMultiplexer>(config =>
+        services.AddSingleton<IConnectionMultiplexer>(_ =>
         {
             var connectionString = configuration.GetConnectionString("Redis");
             if (connectionString == null) throw new Exception("Can not get redis connection string");

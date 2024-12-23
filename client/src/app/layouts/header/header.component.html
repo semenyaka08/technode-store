@@ -28,6 +28,11 @@
     </div>
   </form>
 
+  <button *appIsAdmin routerLink="admin" mat-button class="flex items-center bg-green-500 text-white py-2 px-4 rounded-md">
+    <mat-icon>menu</mat-icon>
+    <span class="ml-0">Admin</span>
+  </button>
+
   <div class="flex items-center space-x-2 gap-3">
     <div class="flex items-center gap-4">
       @if (accountService.currentUser()){

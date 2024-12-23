@@ -25,6 +25,7 @@ public class CategoriesController(ICategoryService categoryService) : Controller
         return Ok(categories);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<IActionResult> AddCategory([FromBody] CategoryAddRequest category)
     {
@@ -33,6 +34,7 @@ public class CategoriesController(ICategoryService categoryService) : Controller
         return CreatedAtAction(nameof(GetCategoryById), new { id }, new { id });
     }
     
+    [Authorize(Roles = "Admin")]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdateCategory([FromRoute] int id, [FromBody] CategoryUpdateRequest updateRequest)
     {
@@ -41,6 +43,7 @@ public class CategoriesController(ICategoryService categoryService) : Controller
         return NoContent();
     }
     
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteCategory([FromRoute] int id)
     {

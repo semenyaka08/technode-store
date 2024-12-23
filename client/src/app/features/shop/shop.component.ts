@@ -80,7 +80,6 @@ export class ShopComponent implements OnInit{
       this.productsService.getProducts(this.shopParameters()).subscribe({
         next: data=> {
           this.pageResult.set(data);
-          console.log(this.pageResult());
         },
         error: err=> console.log(err)
       });

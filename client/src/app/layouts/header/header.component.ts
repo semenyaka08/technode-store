@@ -14,6 +14,7 @@ import {RegisterComponent} from '../../features/account/register/register.compon
 import {AccountService} from '../../core/services/account.service';
 import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
 import {MatDivider} from '@angular/material/divider';
+import {IsAdminDirective} from '../../shared/directives/is-admin.directive';
 
 
 @Component({
@@ -34,6 +35,7 @@ import {MatDivider} from '@angular/material/divider';
     MatMenuTrigger,
     MatMenuItem,
     MatDivider,
+    IsAdminDirective,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'

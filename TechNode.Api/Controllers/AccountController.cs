@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TechNode.Api.Extensions;
@@ -51,8 +52,6 @@ public class AccountController(SignInManager<AppUser> signInManager) : Controlle
     [HttpGet("user-info")]
     public async Task<IActionResult> GetUserInfo()
     {
-        var request = Request;
-        
         var user = await signInManager.UserManager.GetUserByEmailWithAddressAsync(User);
 
         if (user == null) return Unauthorized();
@@ -62,7 +61,8 @@ public class AccountController(SignInManager<AppUser> signInManager) : Controlle
             user.FirstName,
             user.LastName,
             user.Email,
-            UserAddress = user.Address?.ToDto()
+            UserAddress = user.Address?.ToDto(),
+            Roles = User.FindFirstValue(ClaimTypes.Role)
         });
     }
 

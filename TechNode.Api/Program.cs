@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using TechNode.Api.Extensions;
 using TechNode.Api.Middlewares;
 using TechNode.Api.SignalR;
@@ -18,6 +19,7 @@ builder.Services.AddCors();
 
 builder.Services.AddAuthorization();
 builder.Services.AddIdentityApiEndpoints<AppUser>()
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 //Configuring Cookies

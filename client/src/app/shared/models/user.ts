@@ -2,7 +2,8 @@ export interface User{
   firstName: string,
   lastName: string,
   email: string,
-  userAddress: Address
+  userAddress: Address,
+  roles: string[] | string
 }
 
 export interface Address{

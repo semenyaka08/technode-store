@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
+using TechNode.Core.DTOs.OrderDtos.AdminOrdersSection;
 using TechNode.Core.Entities.OrderAggregate;
 using TechNode.Core.Repositories.Interfaces;
 
@@ -40,5 +42,38 @@ public class OrderRepository(ApplicationDbContext context) : IOrderRepository
     public async Task SaveChangesAsync()
     {
         await context.SaveChangesAsync();
+    }
+
+    public async Task<(IEnumerable<Order>, int)> GetAllOrdersAsync(AdminOrdersGetRequest request)
+    {
+        var query = context.Orders.Include(z => z.OrderItems).Include(z => z.DeliveryMethod)
+            .Where(z => request.SearchParam == null
+                        || z.BuyerEmail.Contains(request.SearchParam)
+                        || z.Id.ToString() == request.SearchParam);
+        
+        
+        if (!string.IsNullOrWhiteSpace(request.OrderStatus))
+        {
+            if (Enum.TryParse<OrderStatus>(request.OrderStatus, ignoreCase: true, out var status))
+            {
+                query = query.Where(z=>z.OrderStatus == status);
+            }
+        }
+        
+        int totalCount = query.Count();
+        
+        query = request.SortDirection == "asc" ? query.OrderBy(GetSelectorKey(request.SortBy)) : query.OrderByDescending(GetSelectorKey(request.SortBy));
+        
+        return (await query.Skip((request.PageNumber - 1) * request.PageSize).Take(request.PageSize).ToListAsync(), totalCount);
+    }
+    
+    private Expression<Func<Order, object>> GetSelectorKey(string? sortItem)
+    {
+        return sortItem switch
+        {
+            "status" => z => z.OrderStatus,
+            "amount" => z => z.Subtotal + z.DeliveryMethod.Price,
+            _ => z => z.OrderStatus
+        };
     }
 }

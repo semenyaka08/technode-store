@@ -11,6 +11,7 @@ namespace TechNode.Api.Controllers;
 [Authorize]
 public class OrdersController(IOrdersService ordersService) : ControllerBase
 {
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> CreateOrder([FromBody] OrderCreateDto orderCreateRequest)
     {
@@ -24,6 +25,7 @@ public class OrdersController(IOrdersService ordersService) : ControllerBase
         return CreatedAtAction(nameof(GetOrderById), new { id = orderId }, new { orderId });
     }
 
+    [Authorize]
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetOrderById([FromRoute] int id)
     {
@@ -37,6 +39,7 @@ public class OrdersController(IOrdersService ordersService) : ControllerBase
         return Ok(order);
     }
 
+    [Authorize]
     [HttpGet]
     public async Task<IActionResult> GetOrders()
     {

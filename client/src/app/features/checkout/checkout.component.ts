@@ -25,6 +25,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {OrderToCreate, ShippingAddress} from '../../shared/models/order';
 import {OrderService} from '../../core/services/order.service';
+import {environment} from '../../../environments/environment';
 
 @Component({
   selector: 'app-checkout',
@@ -54,6 +55,10 @@ export class CheckoutComponent implements OnInit, OnDestroy{
   private router = inject(Router);
   private accountService = inject(AccountService);
   private dialog = inject(MatDialog);
+
+  //to remove
+  publicKey: string = environment.publicStripeKey;
+
   addressElement?: StripeAddressElement;
   paymentElement?: StripePaymentElement;
   confirmationToken?: ConfirmationToken;
@@ -65,6 +70,9 @@ export class CheckoutComponent implements OnInit, OnDestroy{
   });
 
   async ngOnInit(){
+    console.log('***********PUBLIC STRIPE KEY**********');
+    console.log(this.publicKey);
+
     try {
       this.addressElement = await this.stripeService.createAddressElement();
       this.addressElement.mount('#address-element');
@@ -86,6 +94,7 @@ export class CheckoutComponent implements OnInit, OnDestroy{
           console.log(result.error.message);
 
         this.confirmationToken = result.confirmationToken;
+        console.log('***********confirmation token**********')
         console.log(this.confirmationToken);
       }
     }catch (err: any){

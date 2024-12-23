@@ -1,6 +1,6 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Product} from '../../shared/models/product';
+import {Product, ProductAddRequest} from '../../shared/models/product';
 import {PageResult} from '../../shared/models/page-result';
 import {ShopParameters} from '../../shared/models/shopParameters';
 import {environment} from '../../../environments/environment';
@@ -48,5 +48,9 @@ export class ProductsService {
     let url = `${this.baseUrl}products/${productId}`;
 
     return this.httpClient.get<Product>(url);
+  }
+
+  addProduct(product: ProductAddRequest){
+    return this.httpClient.post<Product>(`${this.baseUrl}products`, product, {withCredentials: true});
   }
 }

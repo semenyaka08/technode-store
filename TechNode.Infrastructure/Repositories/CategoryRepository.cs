@@ -14,6 +14,10 @@ public class CategoryRepository(ApplicationDbContext context) : ICategoryReposit
         {
             query = query.Where(z=>z.IsMainCategory).Include(z=>z.ChildCategories);
         }
+        else if (isMainCategory is false)
+        {
+            query = query.Where(z=>!z.IsMainCategory);
+        }
 
         if (parentCategoryId != null)
         {

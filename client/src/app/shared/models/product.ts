@@ -11,3 +11,16 @@ export interface Product {
     [key: string]: string;
   };
 }
+
+export interface ProductAddRequest {
+  name: string;
+  description: string;
+  price: number;
+  pictureUrl: string;
+  brand: string;
+  stockQuantity: number;
+  categoryId: number;
+  specifications: {
+    [key: string]: string;
+  };
+}

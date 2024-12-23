@@ -1,7 +1,8 @@
-import {Component, inject, ViewChild} from '@angular/core';
-import {MatTable, MatTableDataSource} from '@angular/material/table';
+import {Component} from '@angular/core';
+import {MatTable} from '@angular/material/table';
 import {MatTab, MatTabGroup} from '@angular/material/tabs';
 import {OrdersComponent} from './orders/orders.component';
+import {CatalogComponent} from './catalog/catalog.component';
 
 @Component({
   selector: 'app-admin',
@@ -9,7 +10,8 @@ import {OrdersComponent} from './orders/orders.component';
     MatTable,
     MatTabGroup,
     MatTab,
-    OrdersComponent
+    OrdersComponent,
+    CatalogComponent
   ],
   templateUrl: './admin.component.html',
   standalone: true,

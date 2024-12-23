@@ -1,4 +1,4 @@
-import {inject, Injectable, signal} from '@angular/core';
+import {computed, inject, Injectable, signal} from '@angular/core';
 import {Address, User} from '../../shared/models/user';
 import {environment} from '../../../environments/environment';
 import {HttpClient, HttpParams} from '@angular/common/http';
@@ -14,6 +14,10 @@ export class AccountService {
   signalrService = inject(SignalrService);
 
   currentUser = signal<User | null>(null);
+  isAdmin = computed(()=>{
+    const roles = this.currentUser()?.roles;
+    return Array.isArray(roles) ? roles.includes('Admin') : roles == 'Admin';
+  })
 
   getCurrentUser(): Observable<boolean> {
     return this.httpClient.get<User>(this.apiUrl + 'account/user-info', { withCredentials: true }).pipe(

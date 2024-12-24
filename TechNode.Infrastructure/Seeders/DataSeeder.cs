@@ -53,7 +53,28 @@ public class DataSeeder(ApplicationDbContext context, UserManager<AppUser> userM
                 await context.DeliveryMethods.AddRangeAsync(deliveryMethods);
                 await context.SaveChangesAsync();
             }
-            
+
+            if (await context.Categories.FirstOrDefaultAsync(z => z.Name == "Ram") == null)
+            {
+                var ramCategory = GetRamCategory();
+                await context.Categories.AddAsync(ramCategory);
+                var ramSpecifications = GetSpecificationsForRam();
+                await context.Specifications.AddRangeAsync(ramSpecifications);
+                
+                ramCategory.Specifications = (ICollection<Specification>)ramSpecifications;
+                
+                await context.SaveChangesAsync();
+            }
+
+            var peripheralsCategory = await context.Categories.Include(category => category.ChildCategories)
+                .FirstOrDefaultAsync(z => z.Name == "Gaming Peripherals");
+
+            if (peripheralsCategory is { ChildCategories.Count: <= 0 })
+            {
+                var peripheralsSubCategories = GetGamingPeripheralsSubCategories();
+                await context.Categories.AddRangeAsync(peripheralsSubCategories);
+                await context.SaveChangesAsync();
+            }
             
             var videocardsCategory = await context.Categories.Include(category => category.Specifications).FirstOrDefaultAsync(c => c.Name == "Videocards");
             if (videocardsCategory != null && !videocardsCategory.Specifications.Any())
@@ -183,5 +204,83 @@ public class DataSeeder(ApplicationDbContext context, UserManager<AppUser> userM
         string password = configuration["AdminData:Password"]!;
         
         return (adminUser, password);
+    }
+
+    private Category GetRamCategory()
+    {
+        var componentCategory = context.Categories.FirstOrDefault(c => c.Name == "Components");
+        var ramCategory = new Category { Name = "Ram", IsMainCategory = false, ParentCategory = componentCategory };
+        return ramCategory;
+    }
+
+    private IEnumerable<Specification> GetSpecificationsForRam()
+    {
+        return new List<Specification>()
+        {
+            new() { Name = "Capacity" },
+            new() { Name = "Speed" },
+            new() { Name = "Memory type"},
+            new() { Name = "Form factor"}
+        };
+    }
+
+    private IEnumerable<Category> GetGamingPeripheralsSubCategories()
+    {
+        var parentCategory = context.Categories.FirstOrDefault(c => c.Name == "Gaming Peripherals");
+        
+        var headphonesSpec = GetSpecificationsForHeadphones();
+        var keyboardSpec = GetSpecificationsForKeyboards();
+        var mouseSpec = GetSpecificationsForMouses();
+        var microphoneSpec = GetSpecificationsForMicrophones();
+        
+        return new List<Category>
+        {
+            new() { Name = "Headphones", IsMainCategory = false, ParentCategory = parentCategory, Specifications = (ICollection<Specification>)headphonesSpec },
+            new() { Name = "Keyboards", IsMainCategory = false, ParentCategory = parentCategory, Specifications = (ICollection<Specification>)keyboardSpec },
+            new() { Name = "Microphones", IsMainCategory = false, ParentCategory = parentCategory, Specifications = (ICollection<Specification>)microphoneSpec },
+            new() { Name = "Mouses", IsMainCategory = false, ParentCategory = parentCategory, Specifications = (ICollection<Specification>)mouseSpec },
+        };
+    }
+
+    private IEnumerable<Specification> GetSpecificationsForMouses()
+    {
+        return new List<Specification>
+        {
+            new() { Name = "DPI" },
+            new() { Name = "Connection interface" },
+            new() { Name = "Color"},
+            new() { Name = "Form factor"}
+        };
+    }
+    
+    private IEnumerable<Specification> GetSpecificationsForKeyboards()
+    {
+        return new List<Specification>()
+        {
+            new() { Name = "Type" },
+            new() { Name = "Form factor" },
+            new() { Name = "Weight"},
+            new() { Name = "Color"}
+        };
+    }
+    
+    private IEnumerable<Specification> GetSpecificationsForHeadphones()
+    {
+        return new List<Specification>
+        {
+            new() { Name = "Type" },
+            new() { Name = "Connection interface" },
+            new() { Name = "Appointment"}
+        };
+    }
+    
+    private IEnumerable<Specification> GetSpecificationsForMicrophones()
+    {
+        return new List<Specification>
+        {
+            new() { Name = "Connection type" },
+            new() { Name = "Connection interface" },
+            new() { Name = "Appointment"}
+        };
     }
 }

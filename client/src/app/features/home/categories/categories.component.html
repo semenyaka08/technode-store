@@ -1,38 +1,40 @@
-<div class="w-full flex relative rounded-l-lg bg-white" (mouseenter)="onDisplayCategories()" (mouseleave)="onDisplayCategories()">
-  <div class="w-full flex">
-    <div class="w-full flex justify-between gap-3 py-5 px-2.5">
-      <ul class="flex-1">
-        @for (category of mainCategories; track category.id) {
-          <li
-            class="text-lg font-medium flex justify-between items-center px-3 py-2 rounded-lg transition duration-300 hover:bg-purple-400 hover:text-white"
-            (mouseover)="activeCategory = category"
-          >
-            <span>{{ category.name }}</span>
-            <mat-icon class="text-lg">chevron_right</mat-icon>
-          </li>
-        }
+
+  <div class="w-full flex relative rounded-l-lg bg-white" (mouseenter)="onDisplayCategories()" (mouseleave)="onDisplayCategories()">
+    <div class="w-full flex">
+      <div class="w-full flex justify-between gap-3 py-5 px-2.5">
+        <ul class="flex-1">
+          @for (category of mainCategories; track category.id) {
+            <li
+              class="text-lg text-purple-500 font-medium flex justify-between items-center px-3 py-2 rounded-lg transition duration-300 hover:bg-purple-400 hover:text-white"
+              (mouseover)="activeCategory = category"
+            >
+              <span>{{ category.name }}</span>
+              <mat-icon class="text-lg">chevron_right</mat-icon>
+            </li>
+          }
+        </ul>
+        <div class="w-1 bg-gray-200"></div>
+      </div>
+    </div>
+
+    <!-- Subcategories block -->
+    <div
+      class="subcategories-block h-full p-4 rounded-r-lg bg-white"
+      *ngIf="displayCategories"
+    >
+      <h2 class="text-xl font-semibold mb-4 text-purple-500">
+        {{ activeCategory!.name }}
+      </h2>
+      <ul>
+        <li
+          *ngFor="let subcategory of activeCategory!.childrenCategories"
+          class="text-base px-3 py-2 hover:text-purple-600 transition duration-300 cursor-pointer"
+        >
+          <a routerLink="category/{{subcategory.name.toLowerCase()}}">
+            {{ subcategory.name }}
+          </a>
+        </li>
       </ul>
-      <div class="w-1 bg-gray-200"></div>
     </div>
   </div>
 
-  <!-- Subcategories block -->
-  <div
-    class="subcategories-block h-full p-4 rounded-r-lg bg-white"
-    *ngIf="displayCategories"
-  >
-    <h2 class="text-xl font-semibold mb-4">
-      {{ activeCategory!.name }}
-    </h2>
-    <ul>
-      <li
-        *ngFor="let subcategory of activeCategory!.childrenCategories"
-        class="text-base px-3 py-2 hover:text-purple-600 transition duration-300 cursor-pointer"
-      >
-        <a routerLink="category/{{subcategory.name.toLowerCase()}}">
-          {{ subcategory.name }}
-        </a>
-      </li>
-    </ul>
-  </div>
-</div>

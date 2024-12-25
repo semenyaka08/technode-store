@@ -114,10 +114,11 @@ Ensure the following are installed on your system:
 - Використання Redis для зберігання та отримання інформації про кошики покупок через бібліотеку `StackExchange.Redis`.
 
 📌 **Посилання на код**:
-- [AccountController.cs](#)
-- [CartController.cs](#)
-- [NotificationHub.cs](#)
-- [CartService.cs](#)
+- [AccountController.cs](TechNode.Api/Controllers/AccountController.cs)
+- [ClaimPrincipleExtensions.cs](TechNode.Api/Extensions/ClaimPrincipleExtensions.cs)
+- [CartController.cs](TechNode.Api/Controllers/CartController.cs)
+- [NotificationHub.cs](TechNode.Api/SignalR/NotificationHub.cs)
+- [CartService.cs](TechNode.Infrastructure/Services/CartService.cs)
 
 ---
 
@@ -139,9 +140,9 @@ Ensure the following are installed on your system:
 - Використання `signal` і `computed` для реактивного управління станом додатку, наприклад, кількість товарів у кошику або розрахунок загальної суми.
 
 📌 **Посилання на код**:
-- [AccountService.ts](#)
-- [CartService.ts](#)
-- [InitService.ts](#)
+- [AccountService.ts](client/src/app/core/services/account.service.ts)
+- [CartService.ts](client/src/app/core/services/cart.service.ts)
+- [InitService.ts](client/src/app/core/services/init.service.ts)
 
 ---
 

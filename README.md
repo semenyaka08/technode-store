@@ -15,7 +15,7 @@ TechNode Store is a full-stack web application designed for managing an online c
 
 - **Backend**: ASP.NET Core with Entity Framework Core for database management.
 - **Frontend**: Angular (v18) with modern libraries for state management and UI components.
-- **Database**: SQL Server (default, but configurable).
+- **Databases**: SQL Server and Redis(default, but configurable).
 - **Third-party Services**:
   - Stripe: For payment processing.
   - Uploadcare: For image and file uploads.

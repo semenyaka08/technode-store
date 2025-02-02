@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Stripe;
-using TechNode.Api.Extensions;
 using TechNode.Api.SignalR;
 using TechNode.Core.Repositories.Interfaces;
 using TechNode.Core.Services.Interfaces;

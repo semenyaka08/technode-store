@@ -9,8 +9,6 @@ import {Router, RouterLink} from '@angular/router';
 import {FormsModule} from '@angular/forms';
 import {MatBadge} from '@angular/material/badge';
 import {CartService} from '../../core/services/cart.service';
-import {MatDialog} from '@angular/material/dialog';
-import {RegisterComponent} from '../../features/account/register/register.component';
 import {AccountService} from '../../core/services/account.service';
 import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
 import {MatDivider} from '@angular/material/divider';
@@ -45,15 +43,7 @@ export class HeaderComponent {
   protected cartService = inject(CartService);
   protected accountService = inject(AccountService);
 
-  private dialogService = inject(MatDialog);
-
   searchPhrase = signal<string | undefined>(undefined);
-
-  openRegisterDialog(){
-    this.dialogService.open(RegisterComponent, {
-      maxWidth: '400px'
-    });
-  }
 
   logout() {
     this.accountService.logout().subscribe({
